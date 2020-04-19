@@ -1,3 +1,34 @@
+<?php
+    require_once('conn.php');
+    if(isset($_POST['btnlogin']))
+    {
+        if($_POST['user']!=''&&$_POST['pass']!='')
+        {
+            $cekuser=false;
+            $user=$_POST['user'];
+            $pass=$_POST['pass'];
+            $query='SELECT * from users';
+            $res=mysqli_query($conn,$query);
+            while ($row=mysqli_fetch_assoc($res)) {
+                if($row['username']==$user)
+                {
+                    $cekuser=true;
+                    if(password_verify($pass,$row['password']))
+                    {
+                        echo "<script>alert('berhasil login')</script>";
+                    }
+                    else echo "<script>alert('Password Salah')</script>";
+                    
+                }
+            }
+            if(!$cekuser)
+            {
+                echo "<script>alert('username tidak ditemukan')</script>";
+            }
+        }
+    }
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -104,17 +135,17 @@
                 <hr>
                 <div class="form-group">
                     <label for="username">Username :</label>
-                    <input type="text" class="form-control" id="username">
+                    <input type="text" class="form-control" id="username" name='user' required>
                 </div>
                 <div class="form-group">
                     <label for="pass">Password :</label>
-                    <input type="password" class="form-control" id="pass">
+                    <input type="password" class="form-control" id="pass" name='pass' required>
                 </div>
                 <div class="checkbox">
-                    <label><input type="checkbox">Remember Me</label>
+                    <label><input type="checkbox" name='remember'>Remember Me</label>
                 </div>
                 <a href="forgotpassword.html" style="margin-left: 160px;font-size: 12px;">Forgot password?</a><br>
-                <button type="submit" class=" btn btn-warning" style="width:280px;">Login</button>
+                <button type="submit" class=" btn btn-warning" style="width:280px;" name='btnlogin'>Login</button>
                 <hr>
                 <p style="color:black;font-weight: bold;">Don't have a Cookie account? <a href="register.php">Sign Up</a></p>
             </form>

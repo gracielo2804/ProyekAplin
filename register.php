@@ -1,7 +1,48 @@
+<?php
+    require_once('conn.php');
+    if (isset($_POST['btnregister'])) {
+        if($_POST['user']!=''&&$_POST['conpass']!=''&&$_POST['conpass']!=''&&$_POST['fullname']!=''&&$_POST['company']!=''&&$_POST['phone']!=''&&$_POST['email']!=''){
+            $cekuser=false;
+            $cekemail=false;
+            $user=$_POST['user'];
+            $pass=$_POST['pass'];
+            $conpass=$_POST['conpass'];
+            $nama=$_POST['fullname'];
+            $company=$_POST['company'];
+            $phone=$_POST['phone'];
+            $email=$_POST['email'];
+            if($pass!=$conpass)echo "<script>alert('Password dan Confirm Password tidak sama !')</script>";
+            else
+            {
+                $query="SELECT * from users where username='$user'";
+                $res=mysqli_query($conn,$query);
+                if($res->num_rows==0)
+                {
+                    $cekuser=true;
+                    $queryemail="SELECT * from users where email='$email'";
+                    $gas=mysqli_query($conn,$queryemail);
+                    if ($gas->num_rows==0) {
+                        $cekemail=true;
+                    }
+                    else echo "<script>alert('Email Sudah Digunakan!')</script>";    
+                }
+                else echo "<script>alert('Username Sudah Digunakan!')</script>";                               
+            }
+            if($cekuser&&$cekemail)
+            {
+                $pass=password_hash($pass,PASSWORD_DEFAULT);
+                $queryinsert="INSERT into users values ('$user','$pass','$company','$nama','$email','$phone')";
+                $execute=mysqli_query($conn,$queryinsert);
+                // echo "<script>alert('Berhasil Register !')</script>";
+                header('location:login.php');
+            }            
+        }
+    }
+?>
 <!doctype html>
 <html lang="en">
   <head>
-    <title>CookiePOS-Login</title>
+    <title>CookiePOS-Register</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -94,36 +135,54 @@
 
   
      
-    <div class="site-blocks-cover"   id="home-section">
+    <div class="site-blocks-cover"id="home-section">
 
-      <div class="container">
+      <div class="container"style="height:950px;width: 1000px;">
         <div class="row align-items-center justify-content-center">
             <div class="login" style="margin-top: 60px;">
-            <form method="post" style="font-weight: bold;color: black;">
-                <h2 style="text-align: center;">Login</h2>
+            <form method="post" style="font-weight: bold;color:black;height: 2500px;transform: translateY(50px);">
+                <h2 style="text-align: center;">Register</h2>
                 <hr>
                 <div class="form-group">
+                    <label for="fullname">Full Name :</label>
+                    <input type="text" class="form-control" id="fullname" style="width: 500px;" name=fullname required value=<?php if(isset($nama)) echo $nama ?>> 
+                </div>
+                <div class="form-group">
+                    <label for="companyname">Company Name :</label>
+                    <input type="text" class="form-control" id="companyname"style="width: 500px;" name=company required value=<?php if(isset($company)) echo $company ?>>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email :</label>
+                    <input type="email" class="form-control" id="email"style="width: 500px;" name=email required value=<?php if(isset($email)) echo $email ?>>
+                </div>
+                <div class="form-group">
+                    <label for="telp">Phone Number :</label>
+                    <input type="number" class="form-control" id="telp"style="width: 500px;" name=phone required value=<?php if(isset($phone)) echo $phone ?>> 
+                </div>
+                <div class="form-group">
                     <label for="username">Username :</label>
-                    <input type="text" class="form-control" id="username">
+                    <input type="text" class="form-control" id="username"style="width: 500px;" name=user required value=<?php if(isset($user)) echo $user ?>>
                 </div>
                 <div class="form-group">
                     <label for="pass">Password :</label>
-                    <input type="password" class="form-control" id="pass">
+                    <input type="password" class="form-control" id="pass"style="width: 500px;" name=pass required value=<?php if(isset($pass)) echo $pass ?>>
                 </div>
-                <div class="checkbox">
-                    <label><input type="checkbox">Remember Me</label>
+                <div class="form-group">
+                    <label for="conpass">Confirm Password :</label>
+                    <input type="password" class="form-control" id="conpass"style="width: 500px;"name=conpass required value=<?php if(isset($conpass)) echo $conpass ?>>
                 </div>
-                <a href="forgotpassword.html" style="margin-left: 160px;font-size: 12px;">Forgot password?</a><br>
-                <button type="submit" class=" btn btn-warning" style="width:280px;">Login</button>
                 <hr>
-                <p style="color:black;font-weight: bold;">Don't have a Cookie account? <a href="register.php">Sign Up</a></p>
+                <div class="row">
+                    <button type="submit" class="btn btn-warning btn-sm" style="transform: translateX(380px);font-weight: bold;" name='btnregister'>Register</button>
+                    <p style="color:black;font-weight: bold;transform: translate(-110px,10px)">Already Have a Cookie account? <a href="login.php">Sign In</a></p>
+                </div>
+                
             </form>
             </div>
         </div>
       </div>
 
      
-
       <footer class="site-footer">
       <div class="row pt-5 mt-5 text-center">
         <div class="col-md-12">
