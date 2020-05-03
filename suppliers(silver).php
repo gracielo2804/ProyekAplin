@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>CookiePOS-Backend</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+		<link rel="stylesheet" href="fonts/icomoon/style.css">
+
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/jquery-ui.css">
+		<link rel="stylesheet" href="css/owl.carousel.min.css">
+		<link rel="stylesheet" href="css/owl.theme.default.min.css">
+		<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+		<link rel="stylesheet" href="css/jquery.fancybox.min.css">
+
+		<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+
+		<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+		<link rel="stylesheet" href="css/aos.css">
+
+		<link rel="stylesheet" href="css/style.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	</head>
+		
+	</head>
+	<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+	
+
+	<div id="overlayer"></div>
+	<div class="loader">
+		<div class="spinner-border text-primary" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+	</div>
+
+
+	<div class="site-wrap">
+
+		<div class="site-mobile-menu site-navbar-target">
+			<div class="site-mobile-menu-header">
+				<div class="site-mobile-menu-close mt-3">
+					<span class="icon-close2 js-menu-toggle"></span>
+				</div>
+			</div>
+			<div class="site-mobile-menu-body"></div>
+		</div>
+	 
+		<!--NAVBAR-->
+		<header class="site-navbar js-sticky-header site-navbar-target" role="banner" style="background-color: rgb(158, 239, 241);">
+
+			<div class="container">
+				<div class="row align-items-center">
+					
+					<div class="col-6 col-xl-2">
+						<h1 class="mb-0 site-logo">
+							<a href="index.html" class="h2 mb-0">
+								<img src="logo(trans).png" alt="logo" style="width: 80px;height: 90px;transform: translateY(20px);">
+						</a>
+					</h1>
+					</div>
+
+					<div class="col-12 col-md-10 d-none d-xl-block">
+						<nav class="site-navigation position-relative text-right" role="navigation">
+							<ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block text-black">
+								<li><a href="backend(silver).html" class="nav-link">Laporan</a></li>
+								<li class="has-children">
+									<a href="#" class="nav-link">Inventory</a>
+									<ul class="dropdown">
+										<li><a href="ringkasan(silver).php" class="nav-link">Ringkasan</a></li>
+										<li><a href="suppliers(silver).php" class="nav-link">Suppliers</a></li>
+									</ul>
+								</li>
+								<li class="has-children">
+									<a href="#" class="nav-link">Karyawan</a>
+									<ul class="dropdown">
+										<li><a href="listkaryawan.html" class="nav-link">List Karyawan</a></li>
+										<li><a href="#" class="nav-link">Hak Akses Karyawan</a></li>
+									</ul>
+								</li>
+									<li><a href="#"><svg class="bi bi-box-arrow-in-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 010-.708L10.793 8 8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0z" clip-rule="evenodd"/>
+										<path fill-rule="evenodd" d="M1 8a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9A.5.5 0 011 8z" clip-rule="evenodd"/>
+										<path fill-rule="evenodd" d="M13.5 14.5A1.5 1.5 0 0015 13V3a1.5 1.5 0 00-1.5-1.5h-8A1.5 1.5 0 004 3v1.5a.5.5 0 001 0V3a.5.5 0 01.5-.5h8a.5.5 0 01.5.5v10a.5.5 0 01-.5.5h-8A.5.5 0 015 13v-1.5a.5.5 0 00-1 0V13a1.5 1.5 0 001.5 1.5h8z" clip-rule="evenodd"/>
+									</svg> Logout</a></li>
+								</ul>
+						</nav>
+					</div>
+
+				<div class="col-6 d-inline-block d-xl-none ml-md-0 py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle float-right"><span class="icon-menu h3"></span></a></div>
+					 
+						
+				</div>
+			</div>
+			
+		</header>
+
+	
+		<div class="site-blocks-cover"id="home-section">
+
+			<div class="container">
+				<div>
+					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Suppliers</h2>
+					<form class="form-inline" style="transform: translate(10px,170px);">
+						<div class="form-group row">
+								<div class="col-10">
+									<input class="form-control" type="text" value="" id="cari"placeholder="Nama Supplier">
+								</div>
+							</div>
+							<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
+								<path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/></svg>
+							</button>
+					</form>
+					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Suppliers +</button>
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" role="dialog">
+						<div class="modal-dialog">									
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+								<h4 class="modal-title" style="text-align: center;">Tambah Supplier</h4>
+								</div>
+								<div class="modal-body">
+									<form id=formInput method=post>
+										<div class="form-group">
+												<label for="namabarang">Nama Supplier :</label>
+												<input type="text" class="form-control" id="namasup" name="namasup">
+										</div>
+										<div class="form-group">
+												<label for="alamat">Alamat:</label>
+												<input type="text" class="form-control" id="alamat" name="alamat">
+										</div>
+										<div class="form-group">
+												<label for="telp">No Telp :</label>
+												<input type="number" class="form-control" id="telp" name="telp">
+										</div>
+										<!-- <div class="form-group">
+												<label for="ketbarang">Keterangan :</label>
+												<input type="text" class="form-control" id="ketbarang" name="ketbarang">
+										</div> -->
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+									<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+					<div class="isi laporan" style="border: solid 1px blue;transform: translateY(200px);height:1200px;border-radius: 10px;">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Nama Supplier</th>
+									<th>Alamat</th>
+									<th>No.Telp</th>
+									<th>Keterangan</th>
+									<th>Opsi</th>
+								</tr>
+							</thead>
+							<tbody id=bodytabel>
+								<!-- <tr>
+									<td>1</td>
+									<td>abc</td>
+									<td>abc</td>
+									<td>0xxxxxx</td>
+									<td>Ada</td>
+									<td>
+										<button type="submit"class="btn btn-warning" name="btnedit"data-toggle="modal" data-target="#myEdit">
+											<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+												<path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
+												<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
+											</svg>
+										</button>                               
+											<button type="submit" class="btn btn-danger" name="btndelete">
+												<svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+													<path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
+												</svg>
+											</button>
+										</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		</div>  
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<script src="js/jquery-ui.js"></script>
+		<script src="js/popper.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
+		<script src="js/jquery.countdown.min.js"></script>
+		<script src="js/jquery.easing.1.3.js"></script>
+		<script src="js/aos.js"></script>
+		<script src="js/jquery.fancybox.min.js"></script>
+		<script src="js/jquery.sticky.js"></script>
+		<script src="js/isotope.pkgd.min.js"></script>
+	
+		
+		<script src="js/main.js"></script>
+		<script>
+			$(docoment).ready(function(){
+				function loadsupplier(){
+					$.ajax({
+						method:'post',
+						url:'ajaxloadsupplier.php',
+						success:function(res){
+							if(res=='0'){
+								$('#bodytabel').append('<tr><td colspan=6>No data Found</td></tr>')
+							}
+							else 
+							{
+
+							}
+						}
+					});
+				}
+			});
+		</script>    
+		</body>
+	</html>
