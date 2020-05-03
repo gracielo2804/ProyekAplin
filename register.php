@@ -145,22 +145,33 @@
 										<span class="text-danger" ></span>
 								</div>
 								<div class="form-group has-feedback">
-										<label for="conpass">Confirm Password :</label>
-										<input type="password" class="form-control textbox" id="conpass"style="width: 500px;"name=conpass  value=<?php if(isset($conpass)) echo $conpass ?>>
-										<i class="form-control-feedback"></i>
-										<span class="text-danger" ></span>
+									<label for="conpass">Confirm Password :</label>
+									<input type="password" class="form-control textbox" id="conpass"style="width: 500px;"name=conpass  value=<?php if(isset($conpass)) echo $conpass ?>>
+									<i class="form-control-feedback"></i>
+									<span class="text-danger" ></span>
+								</div>
+								<div class="form-group has-feedback">
+									<label for="pack">Packages :</label>
+									<select class="form-control select" id="pack"style="width: 500px;"name=pack>
+										<option value="none">--Select Packages--</option>
+										<option value="silver">Silver</option>
+										<option value="gold">Gold</option>
+										<option value="diamond">Diamond</option>
+									</select>
+									<i class="form-control-feedback"></i>
+									<span class="text-danger" ></span>
 								</div>
 								<hr>
 								<div class="row">
-										<button type="submit" class="btn btn-warning btn-sm" style="transform: translateX(380px);font-weight: bold;" name='btnregister'>Register</button>
-										<p style="color:black;font-weight: bold;transform: translate(-110px,10px)">Already Have a Cookie account? <a href="login.php">Sign In</a></p>
+									<button type="submit" class="btn btn-warning btn-sm" style="transform: translateX(380px);font-weight: bold;" name='btnregister'>Register</button>
+									<p style="color:black;font-weight: bold;transform: translate(-110px,10px)">Already Have a Cookie account? <a href="login.php">Sign In</a></p>
 
 								</div>								
 						</form>
 						</div>
 				</div>
 			</div>     
-			<footer class="site-footer mt-auto" style=transform:translateY(150px)>
+			<footer class="site-footer mt-auto" style=transform:translateY(250px)>
 			<div class="row pt-5 mt-5 text-center">
 				<div class="col-md-12">
 					<div class="border-top pt-5">
@@ -192,229 +203,257 @@
 	
 		<script type="text/javascript">
 		$(document).ready(function(){
-				//semua element dengan class text-danger akan di sembunyikan saat load
-				$('.text-danger').hide();
-				//untuk mengecek bahwa semua textbox tidak boleh kosong
-				$('input').each(function(){ 
-						$(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
-								if (! $(this).val()){ //this mengacu pada text box yang sedang fokus
-										return get_error_text(this); //function get_error_text ada di bawah
-								} else {
-										$(this).removeClass('no-valid'); 
-										$(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
-										$(this).closest('div').removeClass('has-warning');
-										$(this).closest('div').addClass('has-success');
-										$(this).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-warning-sign');
-										$(this).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-ok');
+			//semua element dengan class text-danger akan di sembunyikan saat load
+			$('.text-danger').hide();
+			//untuk mengecek bahwa semua textbox tidak boleh kosong
+			$('input').each(function(){ 
+				$(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
+					if (! $(this).val()){ //this mengacu pada text box yang sedang fokus
+						return get_error_text(this); //function get_error_text ada di bawah
+					} else {
+						$(this).removeClass('no-valid'); 
+						$(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
+						$(this).closest('div').removeClass('has-warning');
+						$(this).closest('div').addClass('has-success');
+						$(this).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-warning-sign');
+						$(this).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-ok');
+					}
+				});
+			});
+			$('select').each(function(){ 
+				$(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
+					if ($(this).val()=='none'){ //this mengacu pada text box yang sedang fokus
+						return get_error_text_select(this); //function get_error_text ada di bawah
+					} else {
+						$(this).removeClass('no-valid'); 
+						$(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
+						$(this).closest('div').removeClass('has-warning');
+						$(this).closest('div').addClass('has-success');
+						$(this).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-warning-sign');
+						$(this).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-ok');
+					}
+				});
+			});
+			//mengecek textbox Username Valid Atau Tidak
+			$('#user').blur(function(){
+				var user= $(this).val();
+				var len= user.length;
+				if(len>0){ 																
+					if (len>30){ 
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Maximal Karakter 30");
+						return apply_feedback_error(this);
+					} 
+					else {
+						var valid = false;
+						$.ajax({
+						url: "checkuser.php",
+						type: "POST",
+						data: "user="+user,
+						dataType: "text",
+						success: function(data)
+						{
+							if (data==0){ //pada file check user.php, apabila user sudah ada di database makan akan mengembalikan nilai 0
+								$('#user').parent().find('.text-danger').text("");
+								$('#user').parent().find('.text-danger').text("username sudah digunakan");
+								return apply_feedback_error('#user');
 								}
+						}
 						});
-				});
-        //mengecek textbox Nama Valid Atau Tidak
-        $('#user').blur(function(){
-						var user= $(this).val();
-						var len= user.length;
-						if(len>0){ 																
-              if (len>30){ 
-                  $(this).parent().find('.text-danger').text("");
-                  $(this).parent().find('.text-danger').text("Maximal Karakter 30");
-                  return apply_feedback_error(this);
-              } 
-              else {
-                var valid = false;
-                $.ajax({
-                  url: "checkuser.php",
-                  type: "POST",
-                  data: "user="+user,
-                  dataType: "text",
-                  success: function(data)
-                  {
-                    if (data==0){ //pada file check user.php, apabila user sudah ada di database makan akan mengembalikan nilai 0
-                        $('#user').parent().find('.text-danger').text("");
-                        $('#user').parent().find('.text-danger').text("username sudah digunakan");
-                        return apply_feedback_error('#user');
-                        }
-                  }
-                });
-              }								
+					}								
+				} 
+			});
+
+			$('#fullname').blur(function(){
+				var nama= $(this).val();
+				var len= nama.length;
+				if(len>0){ //jika ada isinya
+					if(!valid_nama(nama)){ //jika nama tidak valid
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Nama Tidak Valid");
+						return apply_feedback_error(this);
+					} else {
+						if (len>50){ //jika karakter >30
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Maximal Karakter 50");
+							return apply_feedback_error(this);
+						}
+					}
+				} 
+			});
+			//mengecek Company Name
+			$('#companyname').blur(function(){
+				var nama= $(this).val();
+				var len= nama.length;
+				if(len>0){ //jika ada isinya
+					if(!valid_nama(nama)){ //jika nama tidak valid
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Nama Tidak Valid");
+						return apply_feedback_error(this);
+					} else {
+						if (len>50){ //jika karakter >30
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Maximal Karakter 50");
+							return apply_feedback_error(this);
+						}
+					}
+				} 
+			});				
+			$('#email').blur(function(){
+				var email= $(this).val();
+				var len= email.length;
+				if(len>0){ 
+					if(!valid_email(email)){ 
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("E-mail Tidak Valid (ex: aaaa@gmail.com)");
+						return apply_feedback_error(this);
+					} 
+					else 
+					{
+						if (len>30){ 
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Maximal Karakter 30");
+							return apply_feedback_error(this);
 						} 
-				});
-				$('#fullname').blur(function(){
-						var nama= $(this).val();
-						var len= nama.length;
-						if(len>0){ //jika ada isinya
-								if(!valid_nama(nama)){ //jika nama tidak valid
-										$(this).parent().find('.text-danger').text("");
-										$(this).parent().find('.text-danger').text("Nama Tidak Valid");
-										return apply_feedback_error(this);
-								} else {
-										if (len>50){ //jika karakter >30
-												$(this).parent().find('.text-danger').text("");
-												$(this).parent().find('.text-danger').text("Maximal Karakter 50");
-												return apply_feedback_error(this);
-										}
-								}
-						} 
-        });
-        //mengecek Company Name
-        $('#companyname').blur(function(){
-						var nama= $(this).val();
-						var len= nama.length;
-						if(len>0){ //jika ada isinya
-								if(!valid_nama(nama)){ //jika nama tidak valid
-										$(this).parent().find('.text-danger').text("");
-										$(this).parent().find('.text-danger').text("Nama Tidak Valid");
-										return apply_feedback_error(this);
-								} else {
-										if (len>50){ //jika karakter >30
-												$(this).parent().find('.text-danger').text("");
-												$(this).parent().find('.text-danger').text("Maximal Karakter 50");
-												return apply_feedback_error(this);
-										}
-								}
-						} 
-				});				
-				$('#email').blur(function(){
-						var email= $(this).val();
-						var len= email.length;
-						if(len>0){ 
-								if(!valid_email(email)){ 
-										$(this).parent().find('.text-danger').text("");
-										$(this).parent().find('.text-danger').text("E-mail Tidak Valid (ex: aaaa@gmail.com)");
-										return apply_feedback_error(this);
-								} 
-								else 
+						else 
+						{
+							var valid = false;
+							$.ajax({
+								url: "checkemail.php",
+								type: "POST",
+								data: "email="+email,
+								dataType: "text",
+								success: function(data)
 								{
-									if (len>30){ 
-											$(this).parent().find('.text-danger').text("");
-											$(this).parent().find('.text-danger').text("Maximal Karakter 30");
-											return apply_feedback_error(this);
-									} 
-									else {
-                    var valid = false;
-                    $.ajax({
-                      url: "checkemail.php",
-                      type: "POST",
-                      data: "email="+email,
-                      dataType: "text",
-                      success: function(data)
-                      {
-                        if (data==0){ //pada file check email.php, apabila email sudah ada di database makan akan mengembalikan nilai 0
-                            $('#email').parent().find('.text-danger').text("");
-                            $('#email').parent().find('.text-danger').text("email sudah digunakan");
-                            return apply_feedback_error('#email');
-                            }
-                      }
-                    });
+									if (data==0){ //pada file check email.php, apabila email sudah ada di database makan akan mengembalikan nilai 0
+										$('#email').parent().find('.text-danger').text("");
+										$('#email').parent().find('.text-danger').text("email sudah digunakan");
+										return apply_feedback_error('#email');
 									}
 								}
-						} 
-				});
-				//mengecek password
-				$('#pass').blur(function(){
-						var password=$(this).val();
-						var len=password.length;
-						if (len>0 && len<8) {
-								$(this).parent().find('.text-danger').text("");
-								$(this).parent().find('.text-danger').text("password minimal 8 karakter");
-								return apply_feedback_error(this);
-						} else {
-								if(len>35) {
-										$(this).parent().find('.text-danger').text("");
-										$(this).parent().find('.text-danger').text("password maximal 35 karakter");
-										return apply_feedback_error(this);
-								}
+							});
 						}
-				});
-				//mengecek konfirmasi password
-				$('#conpass').blur(function(){
-						var pass = $("#pass").val();
-						var conf=$(this).val();
-						var len=conf.length;
-						if (len>0 && pass!==conf) {
-								$(this).parent().find('.text-danger').text("");
-								$(this).parent().find('.text-danger').text("Konfirmasi Password tidak sama dengan password");
-								return apply_feedback_error(this);
-						}
-				});
+					}
+				} 
+			});
+			//mengecek password
+			$('#pass').blur(function(){
+				var password=$(this).val();
+				var len=password.length;
+				if (len>0 && len<8) {
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("password minimal 8 karakter");
+					return apply_feedback_error(this);
+				} else {
+					if(len>35) {
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("password maximal 35 karakter");
+						return apply_feedback_error(this);
+					}
+				}
+			});
+			//mengecek konfirmasi password
+			$('#conpass').blur(function(){
+				var pass = $("#pass").val();
+				var conf=$(this).val();
+				var len=conf.length;
+				if (len>0 && pass!==conf) {
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("Konfirmasi Password tidak sama dengan password");
+					return apply_feedback_error(this);
+				}
+			});
 
-				//mengecek nomer hp
-				$('#telp').blur(function(){
-						var hp=$(this).val();
-						var len=hp.length;
-						if (len>0 && len<=10){
-								$(this).parent().find('.text-danger').text("");
-								$(this).parent().find('.text-danger').text("Nomer HP terlalu pendek");
-								return apply_feedback_error(this);
-						} else {
-								if(!valid_hp(hp)){
-										$(this).parent().find('.text-danger').text("");
-										$(this).parent().find('.text-danger').text("Format nomer hp tidak sah.(ex: +6285736262623 | 081212341234)");
-										return apply_feedback_error(this);
-								} else {
-										if (len >13){
-												$(this).parent().find('.text-danger').text("");
-												$(this).parent().find('.text-danger').text("Nomer HP terlalu Panjang");
-												return apply_feedback_error(this);
-										}
-								}
+			//mengecek nomer hp
+			$('#telp').blur(function(){
+				var hp=$(this).val();
+				var len=hp.length;
+				if (len>0 && len<=10){
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("Nomer HP terlalu pendek");
+					return apply_feedback_error(this);
+				} else {
+					if(!valid_hp(hp)){
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Format nomer hp tidak sah.(ex: +6285736262623 | 081212341234)");
+						return apply_feedback_error(this);
+					} 
+					else {
+						if (len >13){
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Nomer HP terlalu Panjang");
+							return apply_feedback_error(this);
 						}
-				});
+					}
+				}
+			});
 
 				//submit form validasi
-				$('#formInput').submit(function(e){
-            e.preventDefault();            
-						var valid=true;     
-						$(this).find('.textbox').each(function(){
-								if (! $(this).val()){
-										get_error_text(this);
-										valid = false;
-										$('html,body').animate({scrollTop: 0},"fast");
-								} 
-								if ($(this).hasClass('no-valid')){
-										valid = false;
-										$('html,body').animate({scrollTop: 0},"fast");
-								}
-						});
-						if (valid){
-								Swal.fire({
-                  title: "Konfirmasi Simpan Data",
-                  text: "Data Akan di Simpan Ke Database",
-                  type: "success",
-                  icon: 'info',
-                  showCancelButton: true,
-                  confirmButtonColor: "#1da1f2",
-                  confirmButtonText: "Yakin",
-                  closeOnConfirm: false,
-                  showLoaderOnConfirm: true,
-                }).then((result) => 
-                {
-                  if (result.value) {
-                    $.ajax({
-                      url: "adduser.php",
-                      type: "POST",
-                      data: $('#formInput').serialize(), //serialize() untuk mengambil semua data di dalam form
-                      // dataType: "html",
-                      success: function(){                
-                        Swal.fire({                            
-                            title: 'Data berhasil Disimpan',
-                            html: 'Anda akan menuju halaman login',
-                            timer: 2000,
-                            timerProgressBar: true,                            
-                            onClose: () => {                              
-                              window.location.replace('login.php')
-                            }
-                          });
-                      },
-                      error: function (xhr, ajaxOptions, thrownError) {
-                        setTimeout(function(){
-                          Swal.fire("Error", "Tolong Cek Koneksi Lalu Ulangi", "error");
-                        }, 2000);
-                      }
-                    });
-                  }
-                });                
-						}
+			$('#formInput').submit(function(e){
+            	e.preventDefault();            
+				var valid=true;     
+				$(this).find('.textbox').each(function(){
+					if (! $(this).val()){
+						get_error_text(this);
+						valid = false;
+						$('html,body').animate({scrollTop: 0},"fast");
+					} 
+					if ($(this).hasClass('no-valid')){
+						valid = false;
+						$('html,body').animate({scrollTop: 0},"fast");
+					}
 				});
+				$(this).find('.select').each(function(){
+					if ($(this).val()=='none'){
+						get_error_text_select(this);
+						valid = false;
+						$('html,body').animate({scrollTop: 0},"fast");
+					} 
+					if ($(this).hasClass('no-valid')){
+						valid = false;
+						$('html,body').animate({scrollTop: 0},"fast");
+					}
+				});
+				if (valid){
+					Swal.fire({
+						title: "Konfirmasi Simpan Data",
+						text: "Data Akan di Simpan Ke Database",
+						type: "success",
+						icon: 'info',
+						showCancelButton: true,
+						confirmButtonColor: "#1da1f2",
+						confirmButtonText: "Yakin",
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,
+						}).then((result) => 
+						{
+						if (result.value) {
+							$.ajax({
+								url: "adduser.php",
+								type: "POST",
+								data: $('#formInput').serialize(), //serialize() untuk mengambil semua data di dalam form
+								// dataType: "html",
+								success: function(){                
+									Swal.fire({                            
+										title: 'Data berhasil Disimpan',
+										html: 'Anda akan menuju halaman login',
+										timer: 2000,
+										timerProgressBar: true,                            
+										onClose: () => {                              
+										window.location.replace('login.php')
+										}
+									});
+								},
+								error: function (xhr, ajaxOptions, thrownError) {
+									setTimeout(function(){
+									Swal.fire("Error", "Tolong Cek Koneksi Lalu Ulangi", "error");
+									}, 2000);
+								}
+							});
+						}
+					});                
+				}
+			});
 		});
 
 		//fungsi cek nama
@@ -439,19 +478,34 @@
 		}
 		//menerapkan gaya validasi form bootstrap saat terjadi eror
 		function apply_feedback_error(textbox){
-				$(textbox).addClass('no-valid'); //menambah class no valid
-				$(textbox).parent().find('.text-danger').show();
-				$(textbox).closest('div').removeClass('has-success');
-				$(textbox).closest('div').addClass('has-warning');
-				$(textbox).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-ok');
-				$(textbox).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-warning-sign');
+			$(textbox).addClass('no-valid'); //menambah class no valid
+			$(textbox).parent().find('.text-danger').show();
+			$(textbox).closest('div').removeClass('has-success');
+			$(textbox).closest('div').addClass('has-warning');
+			$(textbox).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-ok');
+			$(textbox).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-warning-sign');
 		}
 
 		//untuk mendapat eror teks saat textbox kosong, digunakan saat submit form dan blur fungsi
 		function get_error_text(textbox){
-				$(textbox).parent().find('.text-danger').text("");
-				$(textbox).parent().find('.text-danger').text("* Text Box Ini Tidak Boleh Kosong");
-				return apply_feedback_error(textbox);
+			$(textbox).parent().find('.text-danger').text("");
+			$(textbox).parent().find('.text-danger').text("* Text Box Ini Tidak Boleh Kosong");
+			return apply_feedback_error(textbox);
+		}
+		
+		function apply_feedback_error_select(select){
+				$(select).addClass('no-valid'); //menambah class no valid
+				$(select).parent().find('.text-danger').show();
+				$(select).closest('div').removeClass('has-success');
+				$(select).closest('div').addClass('has-warning');
+				$(select).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-ok');
+				$(select).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-warning-sign');
+		}
+		//untuk mendapat eror teks saat select kosong, digunakan saat submit form dan blur fungsi
+		function get_error_text_select(select){
+			$(select).parent().find('.text-danger').text("");
+			$(select).parent().find('.text-danger').text("* Harap Pilih Packages");
+			return apply_feedback_error(select);
 		}
 		</script>
 		</body>
