@@ -105,19 +105,20 @@
 
       <div class="container">
         <div>
-            <h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Suppliers</h2>
+            <h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Ringkasan Barang</h2>
             <form class="form-inline" style="transform: translate(10px,170px);">
-                <div class="form-group row">
+                  <div class="form-group row">
                     <div class="col-10">
-                      <input class="form-control" type="text" value="" id="cari"placeholder="Nama Supplier">
+                      <input class="form-control" type="text" value="" id="cari"placeholder="Nama Barang">
                     </div>
+                    
                 </div>
                 <button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
                     <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/>
                   </svg></button>
             </form>
-            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Suppliers +</button>
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Barang +</button>
 
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
@@ -126,25 +127,25 @@
                     <!-- Modal content-->
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h4 class="modal-title" style="text-align: center;">Tambah Supplier</h4>
+                        <h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form id=inputbarang method=post>
                                 <div class="form-group">
-                                    <label for="namabarang">Nama Supplier :</label>
+                                    <label for="namabarang">Nama Barang :</label>
                                     <input type="text" class="form-control" id="namabarang" name="namabarang">
                                 </div>
                                 <div class="form-group">
-                                    <label for="alamat">Alamat:</label>
-                                    <input type="text" class="form-control" id="alamat" name="alamat">
+                                    <label for="jumlahbarang">Jumlah Barang : </label>
+                                    <input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
                                 </div>
                                 <div class="form-group">
-                                    <label for="telp">No Telp :</label>
-                                    <input type="number" class="form-control" id="telp" name="telp">
+                                    <label for="ketbarang">Satuan : </label>
+                                    <input type="text" class="form-control" id="satbarang" name="satbarang">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ketbarang">Keterangan :</label>
-                                    <input type="text" class="form-control" id="ketbarang" name="ketbarang">
+                                    <label for="ketbarang">Batas Bawah : </label>
+                                    <input type="text" class="form-control" id="batasb" name="batasb">
                                 </div>
                             </form>
                         </div>
@@ -156,24 +157,26 @@
                     
                     </div>
                 </div>
-            <div class="isi laporan" style="border: solid 1px blue;transform: translateY(200px);height:1200px;border-radius: 10px;">
+            <div class="isi laporan" style="border: solid 1px blue;transform: translateY(180px);height:1200px;border-radius: 10px;">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Supplier</th>
-                            <th>Alamat</th>
-                            <th>No.Telp</th>
+                            <th>Nama</th>
+                            <th>Jumlah Bahan Masuk</th>
+                            <!-- <th>Jumlah Bahan Terpakai</th> -->
+                            <!-- <th>Total Bahan</th> -->
                             <th>Keterangan</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <!-- <tr>
                             <td>1</td>
-                            <td>abc</td>
-                            <td>abc</td>
-                            <td>0xxxxxx</td>
+                            <td>Kopi</td>
+                            <td>100</td>
+                            <td>50</td>
+                            <td>50</td>
                             <td>Ada</td>
                             <td>
                                 <button type="submit"class="btn btn-warning" name="btnedit"data-toggle="modal" data-target="#myEdit">
@@ -181,47 +184,47 @@
                                         <path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
                                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
                                       </svg>
-                                </button>
+                                </button> -->
                                 <!-- Modal
-                <div class="modal fade" id="myEdit" role="dialog" style="transform: translateY(-300px);">
-                    <div class="modal-dialog">-->
-                    
-                    <!-- Modal content-->
-                    <!-- <div class="modal-content">
-                        <div class="modal-header">
-                        <h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div class="form-group">
-                                    <label for="namabarang">Nama Barang :</label>
-                                    <input type="text" class="form-control" id="namabarang" name="namabarang">
-                                </div>
-                                <div class="form-group">
-                                    <label for="jumlahbarang">Jumlah Bahan Masuk:</label>
-                                    <input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ketbarang">Keterangan :</label>
-                                    <input type="text" class="form-control" id="ketbarang" name="ketbarang">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
-                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                    
-                    </div>
-                </div>  -->
-                                <button type="submit" class="btn btn-danger" name="btndelete">
+                                <div class="modal fade" id="myEdit" role="dialog" style="transform: translateY(-300px);">
+                                    <div class="modal-dialog">-->
+                                    
+                                    <!-- Modal content-->
+                                    <!-- <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="namabarang">Nama Barang :</label>
+                                                    <input type="text" class="form-control" id="namabarang" name="namabarang">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="jumlahbarang">Jumlah Bahan Masuk:</label>
+                                                    <input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ketbarang">Keterangan :</label>
+                                                    <input type="text" class="form-control" id="ketbarang" name="ketbarang">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                    
+                                    </div>
+                                </div>  -->
+                                <!-- <button type="submit" class="btn btn-danger" name="btndelete">
                                     <svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
                                       </svg>
                                 </button>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -245,6 +248,14 @@
   
     
     <script src="js/main.js"></script>
+    <script>
+        $(docoment).ready(function(){
+            function loadbarang(){
+                
+            }
+
+        });
+    </script>
   
     
     </body>
