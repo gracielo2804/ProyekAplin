@@ -2,9 +2,11 @@
 require 'conn.php';
 session_start();
 $username=$_SESSION['login']['username'];
-$query="SELECT * from supplier where username='$username'";
+$nama=$_POST['namasearch'];
+$query="SELECT * from supplier where username='$username' and upper(nama_supplier) Like upper('%$nama%') ";
 $strings='';
 $res=mysqli_query($conn,$query);
+echo mysqli_error($conn);
 if(mysqli_num_rows($res)==0)echo '0';
 else
 {

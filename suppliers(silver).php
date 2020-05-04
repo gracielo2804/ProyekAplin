@@ -1,3 +1,6 @@
+<?php
+	require_once 'conn.php';
+?>
 <!doctype html>
 <html lang="en">
 	<head>
@@ -24,9 +27,10 @@
 
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/bootstrap.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+		<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 	</head>
-		
-	</head>
+
 	<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
 	
 
@@ -104,7 +108,7 @@
 			<div class="container">
 				<div>
 					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Suppliers</h2>
-					<form class="form-inline" style="transform: translate(10px,170px);">
+					<form class="form-inline" style="transform: translate(10px,170px);" id="formsearch">
 						<div class="form-group row">
 								<div class="col-10">
 									<input class="form-control" type="text" value="" id="cari"placeholder="Nama Supplier">
@@ -117,41 +121,44 @@
 					</form>
 					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Suppliers +</button>
 					<!-- Modal -->
-					<div class="modal fade" id="myModal" role="dialog">
-						<div class="modal-dialog">									
-							<!-- Modal content-->
-							<div class="modal-content">
-								<div class="modal-header">
-								<h4 class="modal-title" style="text-align: center;">Tambah Supplier</h4>
-								</div>
-								<div class="modal-body">
-									<form id=formInput method=post>
+					<form id="FormaddSupp" method="post">
+						<div class="modal fade" id="myModal" role="dialog">
+							<div class="modal-dialog">									
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+									<h4 class="modal-title" style="text-align: center;">Tambah Supplier</h4>
+									</div>
+									<div class="modal-body">
 										<div class="form-group">
-												<label for="namabarang">Nama Supplier :</label>
-												<input type="text" class="form-control" id="namasup" name="namasup">
+											<label for="namasup">Nama Supplier :</label>
+											<input type="text" class="form-control" id="namasup" name="namasup">
+											<span class="text-danger" ></span>
 										</div>
 										<div class="form-group">
-												<label for="alamat">Alamat:</label>
-												<input type="text" class="form-control" id="alamat" name="alamat">
+											<label for="alamat">Alamat:</label>
+											<input type="text" class="form-control" id="alamat" name="alamat">
+											<span class="text-danger" ></span>
 										</div>
 										<div class="form-group">
-												<label for="telp">No Telp :</label>
-												<input type="number" class="form-control" id="telp" name="telp">
+											<label for="telp">No Telp :</label>
+											<input type="number" class="form-control" id="telp" name="telp">
+											<span class="text-danger" ></span>
 										</div>
-										<!-- <div class="form-group">
-												<label for="ketbarang">Keterangan :</label>
-												<input type="text" class="form-control" id="ketbarang" name="ketbarang">
-										</div> -->
-									</form>
-								</div>
-								<div class="modal-footer">
-									<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
-									<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+										<div class="form-group">
+											<label for="ketbarang">Keterangan :</label>
+											<input type="text" class="form-control" id="ketsup" name="ketsup">
+											<span class="text-danger" ></span>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+									</div>
 								</div>
 							</div>
-						
 						</div>
-					</div>
+					</form>
 					<div class="isi laporan" style="border: solid 1px blue;transform: translateY(200px);height:1200px;border-radius: 10px;">
 						<table class="table table-bordered">
 							<thead>
@@ -208,24 +215,174 @@
 	
 		
 		<script src="js/main.js"></script>
-		<script>
+		<script type="text/javascript">
 			$(document).ready(function(){
+				$('#formsearch').on('submit',function(e){
+					e.preventDefault();
+					hasilsearch($('#cari').val());
+				});
+
+				loadsupplier();
+				$('.text-danger').hide();
+				//untuk mengecek bahwa semua textbox tidak boleh kosong
+				$('#FormaddSupp input').each(function(){ 
+					$(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
+						if($(this).attr('id')!='#namasup'){
+							if (! $(this).val()){ //this mengacu pada text box yang sedang fokus
+							return get_error_text(this); //function get_error_text ada di bawah
+							} else {
+								$(this).removeClass('no-valid'); 
+								$(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
+								$(this).closest('div').removeClass('has-warning');
+								$(this).closest('div').addClass('has-success');							
+							}
+						}						
+					});
+				});
+				$('#telp').blur(function(){
+					var hp=$(this).val();
+					var len=hp.length;
+					if (len>0 && len<=10){
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Nomer HP terlalu pendek");
+						return apply_feedback_error(this);
+					} else {
+						if(!valid_hp(hp)){
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Format nomer hp tidak sah.(ex: +6285736262623 | 081212341234)");
+							return apply_feedback_error(this);
+						} 
+						else {
+							if (len >13){
+								$(this).parent().find('.text-danger').text("");
+								$(this).parent().find('.text-danger').text("Nomer HP terlalu Panjang");
+								return apply_feedback_error(this);
+							}
+						}
+					}
+				});
+
+				$('#FormaddSupp').submit(function(e) {
+					e.preventDefault();
+					var valid=true;     
+					$(this).find('input').each(function(){
+						if (! $(this).val()){
+							get_error_text(this);
+							valid = false;							
+						} 
+						if ($(this).hasClass('no-valid')){
+							valid = false;
+						}
+					});
+					if(valid)
+					{
+						if(cekSup($('#namasup').val()))addsup();
+						else
+						{
+							get_error_text_ada($('#namasup'));
+						}
+					}
+					else
+					{
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Data Tidak Lengkap!',
+						})
+					}
+				});
 				function loadsupplier(){
+					$('#bodytabel').html('');
 					$.ajax({
 						method:'post',
 						url:'ajaxloadsupplier.php',
 						success:function(res){
 							if(res=='0'){
-								$('#bodytabel').append('<tr><td colspan=6>No data Found</td></tr>')
+								$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
 							}
 							else 
 							{
-
+								data=JSON.parse(res);
+								$('#bodytabel').append(data)
 							}
 						}
 					});
 				}
 			});
+			function addsup(){					
+				$.ajax({
+						method:'post',
+						url:'ajaxaddsupplier.php',
+						data: $('#FormaddSupp').serialize(),
+						success:function(res){
+							if(res=='1'){
+								Swal.fire({                            
+									title: 'Berhasil Menambah Supplier',
+									// html: 'Anda akan menuju halaman login',
+									timer: 1000,
+									timerProgressBar: true,                            
+									onClose: () => {    
+										$('#myModal').modal('hide');
+										loadsupplier();
+
+									}
+								});
+							}							
+						}
+					});					
+			}
+			function cekSup(nama){  
+				status;
+				$.ajax({
+					method:'post',
+					url:'ajaxceksupplier.php',
+					data:{namasup : nama},
+					success:function (res){
+						if(res=='tidak ada')status='true';					
+						else status='false'
+					}
+				});
+				return status;
+			}
+			function hasilsearch(nama)
+			{
+				$('#bodytabel').html('');
+				$.ajax({
+					method:'post',
+					url:'ajaxsearchsupplier.php',
+					data:{namasearch:nama},
+					success:function(res){
+						if(res=='0'){
+							$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
+						}
+						else 
+						{
+							data=JSON.parse(res);
+							$('#bodytabel').append(data)
+						}
+					}
+				});
+			}
+			function apply_feedback_error(textbox){
+				$(textbox).addClass('no-valid'); //menambah class no valid
+				$(textbox).parent().find('.text-danger').show();
+				$(textbox).closest('div').removeClass('has-success');
+				$(textbox).closest('div').addClass('has-warning');					
+			}
+			function get_error_text(textbox){
+				$(textbox).parent().find('.text-danger').text("");
+				$(textbox).parent().find('.text-danger').text("* Field Ini Tidak Boleh Kosong");
+				 apply_feedback_error(textbox);
+			}
+			function get_error_text_ada(textbox){
+				$(textbox).parent().find('.text-danger').text("");
+				$(textbox).parent().find('.text-danger').text("* Nama supplier Sudah Ada");
+				return apply_feedback_error(textbox);
+			}
+			function valid_hp(hp){
+				var pola = new RegExp(/^[0-9-+]{12,14}$/);
+				return pola.test(hp);
+			}	
 		</script>    
 		</body>
 	</html>

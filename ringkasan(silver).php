@@ -90,7 +90,7 @@ session_start();
 											<li><a href="#" class="nav-link">Hak Akses Karyawan</a></li>
 										</ul>
 								</li>
-										<li><a href="#"><svg class="bi bi-box-arrow-in-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+										<li><a href="index.html"><svg class="bi bi-box-arrow-in-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 												<path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 010-.708L10.793 8 8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0z" clip-rule="evenodd"/>
 												<path fill-rule="evenodd" d="M1 8a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9A.5.5 0 011 8z" clip-rule="evenodd"/>
 												<path fill-rule="evenodd" d="M13.5 14.5A1.5 1.5 0 0015 13V3a1.5 1.5 0 00-1.5-1.5h-8A1.5 1.5 0 004 3v1.5a.5.5 0 001 0V3a.5.5 0 01.5-.5h8a.5.5 0 01.5.5v10a.5.5 0 01-.5.5h-8A.5.5 0 015 13v-1.5a.5.5 0 00-1 0V13a1.5 1.5 0 001.5 1.5h8z" clip-rule="evenodd"/>
@@ -116,7 +116,7 @@ session_start();
 					<form class="form-inline" style="transform: translate(10px,170px);" id=formsearch>
 						<div class="form-group row">
 							<div class="col-10">
-								<input class="form-control" type="text" value="" id="cari"placeholder="Nama Barang">
+								<input class="form-control" type="text" value="" id="cari" placeholder="Nama Barang">
 							</div>										
 						</div>
 						<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -179,8 +179,6 @@ session_start();
 									<th>Nama</th>
 									<th>Stok</th>
 									<th>Satuan</th>
-									<!-- <th>Jumlah Bahan Terpakai</th> -->
-									<!-- <th>Total Bahan</th> -->
 									<th>Keterangan</th>
 									<th>Opsi</th>
 								</tr>
@@ -267,8 +265,6 @@ session_start();
 				$('#formsearch').on('submit',function(e){
 					e.preventDefault();
 					hasilsearch($('#cari').val());
-
-
 				});
 				function hasilsearch(nama)
 				{
@@ -279,7 +275,7 @@ session_start();
 						data:{namasearch:nama},
 						success:function(res){
 							if(res=='0'){
-								$('#bodytabel').append('<tr><td colspan=5 align=center><b>No data Found</b></td></tr>');
+								$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
 							}
 							else 
 							{
@@ -297,7 +293,7 @@ session_start();
 						url:'ajaxloadbarang.php',
 						success:function(res){
 							if(res=='0'){
-								$('#bodytabel').append('<tr><td colspan=5 align=center><b>No data Found</b></td></tr>');
+								$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
 							}
 							else 
 							{
