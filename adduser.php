@@ -1,6 +1,6 @@
 <?php
 require 'conn.php';
-$$user=$_POST['user'];
+$user=$_POST['user'];
 $pass=$_POST['pass'];
 $nama=$_POST['fullname'];
 $company=$_POST['company'];

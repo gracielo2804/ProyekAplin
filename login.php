@@ -1,32 +1,5 @@
 <?php
-    require_once('conn.php');
-    if(isset($_POST['btnlogin']))
-    {
-        if($_POST['user']!=''&&$_POST['pass']!='')
-        {
-            $cekuser=false;
-            $user=$_POST['user'];
-            $pass=$_POST['pass'];
-            $query='SELECT * from users';
-            $res=mysqli_query($conn,$query);
-            while ($row=mysqli_fetch_assoc($res)) {
-                if($row['username']==$user)
-                {
-                    $cekuser=true;
-                    if(password_verify($pass,$row['password']))
-                    {
-                        echo "<script>alert('berhasil login')</script>";
-                    }
-                    else echo "<script>alert('Password Salah')</script>";
-                    
-                }
-            }
-            if(!$cekuser)
-            {
-                echo "<script>alert('username tidak ditemukan')</script>";
-            }
-        }
-    }
+  require_once('conn.php');
 ?>
 
 <!doctype html>
@@ -54,6 +27,10 @@
     <link rel="stylesheet" href="css/aos.css">
 
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- <script src="sweetalert2.all.min.js"></script> -->
+    <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
     
   </head>
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -130,16 +107,20 @@
       <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="login" style="margin-top: 60px;">
-            <form method="post" style="font-weight: bold;color: black;">
+            <form method="post" id="logForm" style="font-weight: bold;color: black;">
                 <h2 style="text-align: center;">Login</h2>
                 <hr>
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <label for="username">Username :</label>
-                    <input type="text" class="form-control" id="username" name='user' required>
+                    <input type="text" class="form-control textbox" id="username" name='user'>
+                    <i class="form-control-feedback"></i>
+										<span class="text-danger" ></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group has-feedback">
                     <label for="pass">Password :</label>
-                    <input type="password" class="form-control" id="pass" name='pass' required>
+                    <input type="password" class="form-control textbox" id="pass" name='pass'>
+                    <i class="form-control-feedback"></i>
+										<span class="text-danger" ></span>
                 </div>
                 <div class="checkbox">
                     <label><input type="checkbox" name='remember'>Remember Me</label>
@@ -181,9 +162,99 @@
     <script src="js/jquery.fancybox.min.js"></script>
     <script src="js/jquery.sticky.js"></script>
     <script src="js/isotope.pkgd.min.js"></script>
-  
-    
     <script src="js/main.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('.text-danger').hide();
+        //untuk mengecek bahwa semua textbox tidak boleh kosong
+        $('input').each(function(){ 
+          $(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
+            if (! $(this).val()){ //this mengacu pada text box yang sedang fokus
+              return get_error_text(this); //function get_error_text ada di bawah
+            } else {
+              $(this).removeClass('no-valid'); 
+              $(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
+              $(this).closest('div').removeClass('has-warning');
+              $(this).closest('div').addClass('has-success');
+              $(this).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-warning-sign');
+              $(this).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-ok');
+            }
+          });
+        });
+
+        $('#logForm').submit(function(e) {
+          e.preventDefault();
+          $.ajax({
+            url: "ceklogin.php",
+						type: "POST",
+						data: $('#logForm').serialize(),
+            success: function (res) {
+              if (res == 'username') {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Username tidak dapat kami temukan',
+                  footer: '<a href=register.php>Belum memiliki akun?</a>'
+                })
+              }else if (res == 'pass') {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Password yang anda masukkan salah',
+                })
+              }else if (res == 'g') {
+                Swal.fire({
+                    icon: 'success',                            
+										title: 'Login berhasil',
+										timer: 2000,
+										timerProgressBar: true,                            
+										onClose: () => {                              
+										window.location.replace('backend(gold).html')
+										}
+								});
+              }else if (res == 's') {
+                Swal.fire({
+                    icon: 'success',                            
+										title: 'Login berhasil',
+										timer: 2000,
+										timerProgressBar: true,                            
+										onClose: () => {                              
+										window.location.replace('backend(silver).html')
+										}
+								});
+              }else if (res == 'd') {
+                Swal.fire({
+                    icon: 'success',                            
+										title: 'Login berhasil',
+										timer: 2000,
+										timerProgressBar: true,                            
+										onClose: () => {                              
+										window.location.replace('backend(diamond).html')
+										}
+								});
+              }
+            }
+          })
+        })
+      })
+      function get_error_text(textbox){
+        $(textbox).parent().find('.text-danger').text("");
+        $(textbox).parent().find('.text-danger').text("* Text Box Ini Tidak Boleh Kosong");
+        return apply_feedback_error(textbox);
+      }
+
+      function apply_feedback_error(textbox){
+			$(textbox).addClass('no-valid'); //menambah class no valid
+			$(textbox).parent().find('.text-danger').show();
+			$(textbox).closest('div').removeClass('has-success');
+			$(textbox).closest('div').addClass('has-warning');
+			$(textbox).parent().find('.form-control-feedback').removeClass('glyphicon glyphicon-ok');
+			$(textbox).parent().find('.form-control-feedback').addClass('glyphicon glyphicon-warning-sign');
+		  }
+
+      
+    </script>
   
     
     </body>
