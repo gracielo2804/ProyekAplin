@@ -23,8 +23,7 @@
 		<link rel="stylesheet" href="css/aos.css">
 
 		<link rel="stylesheet" href="css/style.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script src="js/bootstrap.js"></script>
 	</head>
 		
 	</head>
@@ -210,7 +209,7 @@
 		
 		<script src="js/main.js"></script>
 		<script>
-			$(docoment).ready(function(){
+			$(document).ready(function(){
 				function loadsupplier(){
 					$.ajax({
 						method:'post',

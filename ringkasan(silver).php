@@ -1,3 +1,7 @@
+<?php
+require 'conn.php';
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,7 +12,8 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 		<link rel="stylesheet" href="fonts/icomoon/style.css">
 
-		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<!-- <link rel="stylesheet" href="css/bootstrap.min.css"> -->
+		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/jquery-ui.css">
 		<link rel="stylesheet" href="css/owl.carousel.min.css">
 		<link rel="stylesheet" href="css/owl.theme.default.min.css">
@@ -23,8 +28,10 @@
 		<link rel="stylesheet" href="css/aos.css">
 
 		<link rel="stylesheet" href="css/style.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script src="js/jQuery.js"></script>
+		<script src="js/bootstrap.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+		<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 	</head>
 		
 	</head>
@@ -105,136 +112,143 @@
 
 			<div class="container">
 				<div>
-						<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Ringkasan Barang</h2>
-						<form class="form-inline" style="transform: translate(10px,170px);">
-									<div class="form-group row">
-										<div class="col-10">
-											<input class="form-control" type="text" value="" id="cari"placeholder="Nama Barang">
-										</div>
-										
-								</div>
-								<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-										<path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
-										<path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/>
-									</svg></button>
-						</form>
-						<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Barang +</button>
-
-								<!-- Modal -->
-								<div class="modal fade" id="myModal" role="dialog">
-										<div class="modal-dialog">
-										
-										<!-- Modal content-->
-										<div class="modal-content">
-												<div class="modal-header">
-												<h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
-												</div>
-												<div class="modal-body">
-														<form id=formInput method=post>
-																<div class="form-group">
-																		<label for="namabarang">Nama Barang :</label>
-																		<input type="text" class="form-control" id="namabarang" name="namabarang">
-																</div>
-																<div class="form-group">
-																		<label for="jumlahbarang">Jumlah Barang : </label>
-																		<input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
-																</div>
-																<div class="form-group">
-																		<label for="ketbarang">Satuan : </label>
-																		<input type="text" class="form-control" id="satbarang" name="satbarang">
-																</div>
-																<div class="form-group">
-																		<label for="ketbarang">Batas Bawah : </label>
-																		<input type="text" class="form-control" id="batasb" name="batasb">
-																</div>
-														</form>
-												</div>
-												<div class="modal-footer">
-												<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
-												<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-												</div>
-										</div>
-										
-										</div>
-								</div>
-						<div class="isi laporan" style="border: solid 1px blue;transform: translateY(180px);height:1200px;border-radius: 10px;">
-								<table class="table table-bordered">
-										<thead>
-												<tr>
-														<th>No</th>
-														<th>Nama</th>
-														<th>Jumlah Bahan Masuk</th>
-														<!-- <th>Jumlah Bahan Terpakai</th> -->
-														<!-- <th>Total Bahan</th> -->
-														<th>Keterangan</th>
-														<th>Opsi</th>
-												</tr>
-										</thead>
-										<tbody id=bodytabel>
-												<!-- <tr>
-														<td>1</td>
-														<td>Kopi</td>
-														<td>100</td>
-														<td>50</td>
-														<td>50</td>
-														<td>Ada</td>
-														<td>
-																<button type="submit"class="btn btn-warning" name="btnedit"data-toggle="modal" data-target="#myEdit">
-																		<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-																				<path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
-																				<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
-																			</svg>
-																</button> -->
-																<!-- Modal
-																<div class="modal fade" id="myEdit" role="dialog" style="transform: translateY(-300px);">
-																		<div class="modal-dialog">-->
-																		
-																		<!-- Modal content-->
-																		<!-- <div class="modal-content">
-																				<div class="modal-header">
-																				<h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
-																				</div>
-																				<div class="modal-body">
-																						<form>
-																								<div class="form-group">
-																										<label for="namabarang">Nama Barang :</label>
-																										<input type="text" class="form-control" id="namabarang" name="namabarang">
-																								</div>
-																								<div class="form-group">
-																										<label for="jumlahbarang">Jumlah Bahan Masuk:</label>
-																										<input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
-																								</div>
-																								<div class="form-group">
-																										<label for="ketbarang">Keterangan :</label>
-																										<input type="text" class="form-control" id="ketbarang" name="ketbarang">
-																								</div>
-																						</form>
-																				</div>
-																				<div class="modal-footer">
-																				<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
-																				<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-																				</div>
-																		</div>
-																		
-																		</div>
-																</div>  -->
-																<!-- <button type="submit" class="btn btn-danger" name="btndelete">
-																		<svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-																				<path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
-																			</svg>
-																</button>
-														</td>
-												</tr> -->
-										</tbody>
-								</table>
+					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Ringkasan Barang</h2>
+					<form class="form-inline" style="transform: translate(10px,170px);" id=formsearch>
+						<div class="form-group row">
+							<div class="col-10">
+								<input class="form-control" type="text" value="" id="cari"placeholder="Nama Barang">
+							</div>										
 						</div>
+						<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
+								<path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/>
+							</svg>
+						</button>
+					</form>
+					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Barang +</button>
+					<form id=formaddbarang method='post'>
+						<!-- Modal -->
+						<div class="modal fade" id="myModal" role="dialog">
+							<div class="modal-dialog">											
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+									<h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="namabarang">Nama Barang :</label>
+											<input type="text" class="form-control" id="namabarang" name="namabarang">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="jumlahbarang">Jumlah Barang : </label>
+											<input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="ketbarang">Satuan : </label>
+											<input type="text" class="form-control" id="satbarang" name="satbarang">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="ketbarang">Batas Bawah : </label>
+											<input type="text" class="form-control" id="batasb" name="batasb">
+											<span class="text-danger" ></span>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+									</div>
+								</div>											
+							</div>
+						</div>
+						<!-- Modal -->
+					</form>
+					
+							
+					<div class="isi laporan" style="border: solid 1px blue;transform: translateY(180px);height:1200px;border-radius: 10px;">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Nama</th>
+									<th>Stok</th>
+									<th>Satuan</th>
+									<!-- <th>Jumlah Bahan Terpakai</th> -->
+									<!-- <th>Total Bahan</th> -->
+									<th>Keterangan</th>
+									<th>Opsi</th>
+								</tr>
+							</thead>
+							<tbody id=bodytabel>
+									<!-- <tr>
+											<td>1</td>
+											<td>Kopi</td>
+											<td>100</td>
+											<td>50</td>
+											<td>50</td>
+											<td>Ada</td>
+											<td>
+													<button type="submit"class="btn btn-warning" name="btnedit"data-toggle="modal" data-target="#myEdit">
+															<svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+																	<path d="M15.502 1.94a.5.5 0 010 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 01.707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 00-.121.196l-.805 2.414a.25.25 0 00.316.316l2.414-.805a.5.5 0 00.196-.12l6.813-6.814z"/>
+																	<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 002.5 15h11a1.5 1.5 0 001.5-1.5v-6a.5.5 0 00-1 0v6a.5.5 0 01-.5.5h-11a.5.5 0 01-.5-.5v-11a.5.5 0 01.5-.5H9a.5.5 0 000-1H2.5A1.5 1.5 0 001 2.5v11z" clip-rule="evenodd"/>
+																</svg>
+													</button> -->
+													<!-- Modal
+													<div class="modal fade" id="myEdit" role="dialog" style="transform: translateY(-300px);">
+															<div class="modal-dialog">-->
+															
+															<!-- Modal content-->
+															<!-- <div class="modal-content">
+																	<div class="modal-header">
+																	<h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
+																	</div>
+																	<div class="modal-body">
+																			<form>
+																					<div class="form-group">
+																							<label for="namabarang">Nama Barang :</label>
+																							<input type="text" class="form-control" id="namabarang" name="namabarang">
+																					</div>
+																					<div class="form-group">
+																							<label for="jumlahbarang">Jumlah Bahan Masuk:</label>
+																							<input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang">
+																					</div>
+																					<div class="form-group">
+																							<label for="ketbarang">Keterangan :</label>
+																							<input type="text" class="form-control" id="ketbarang" name="ketbarang">
+																					</div>
+																			</form>
+																	</div>
+																	<div class="modal-footer">
+																	<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+																	<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+																	</div>
+															</div>
+															
+															</div>
+													</div>  -->
+													<!-- <button type="submit" class="btn btn-danger" name="btndelete">
+															<svg class="bi bi-trash-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+																	<path fill-rule="evenodd" d="M2.5 1a1 1 0 00-1 1v1a1 1 0 001 1H3v9a2 2 0 002 2h6a2 2 0 002-2V4h.5a1 1 0 001-1V2a1 1 0 00-1-1H10a1 1 0 00-1-1H7a1 1 0 00-1 1H2.5zm3 4a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7a.5.5 0 01.5-.5zM8 5a.5.5 0 01.5.5v7a.5.5 0 01-1 0v-7A.5.5 0 018 5zm3 .5a.5.5 0 00-1 0v7a.5.5 0 001 0v-7z" clip-rule="evenodd"/>
+																</svg>
+													</button>
+											</td>
+									</tr> -->
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
 		
 
 		</div>  
-		<script src="js/jquery-3.3.1.min.js"></script>
 		<script src="js/jquery-ui.js"></script>
 		<script src="js/popper.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
@@ -249,26 +263,197 @@
 		
 		<script src="js/main.js"></script>
 		<script>
-				$(docoment).ready(function(){
-						function loadbarang(){
-							$.ajax({
-								method:'post',
-								url:'ajaxloadbarang.php',
-								success:function(res){
-									if(res=='0'){
-										$('#bodytabel').append('<tr><td colspan=5 align=center>No data Found</td></tr>')
-									}
-									else 
-									{
+			$(document).ready(function(){
+				$('#formsearch').on('submit',function(e){
+					e.preventDefault();
+					hasilsearch($('#cari').val());
 
-									}
-								}
-							});
-						}
 
 				});
-		</script>
-	
-		
+				function hasilsearch(nama)
+				{
+					$('#bodytabel').html('');
+					$.ajax({
+						method:'post',
+						url:'ajaxsearchbarang.php',
+						data:{namasearch:nama},
+						success:function(res){
+							if(res=='0'){
+								$('#bodytabel').append('<tr><td colspan=5 align=center><b>No data Found</b></td></tr>');
+							}
+							else 
+							{
+								data=JSON.parse(res);
+								$('#bodytabel').append(data)
+							}
+						}
+					});
+				}
+				loadbarang();
+				function loadbarang(){
+					$('#bodytabel').html('');
+					$.ajax({
+						method:'post',
+						url:'ajaxloadbarang.php',
+						success:function(res){
+							if(res=='0'){
+								$('#bodytabel').append('<tr><td colspan=5 align=center><b>No data Found</b></td></tr>');
+							}
+							else 
+							{
+								data=JSON.parse(res);
+								$('#bodytabel').append(data)
+							}
+						}
+					});
+				}
+				function addbarang()
+				{					
+					$.ajax({
+						method:'post',
+						url:'ajaxaddbarang.php',
+						data: $('#formaddbarang').serialize(),
+						success:function(res){
+							if(res=='1'){
+								Swal.fire({                            
+									title: 'Berhasil Menambah Barang',
+									// html: 'Anda akan menuju halaman login',
+									timer: 1000,
+									timerProgressBar: true,                            
+									onClose: () => {    
+										$('#myModal').modal('toggle');
+										// $('#myModal .close').click();
+										loadbarang();
+
+									}
+								});
+							}							
+						}
+					});				
+				}
+				$('#formaddbarang').on('submit',function(e){
+					e.preventDefault();
+					var valid=true;     
+					$(this).find('input').each(function(){
+						if (! $(this).val()){
+							get_error_text(this);
+							valid = false;							
+						} 
+						if ($(this).hasClass('no-valid')){
+							valid = false;
+						}
+					});
+					if(valid)
+					{
+						if(cekbarang($('#namabarang').val()))addbarang();
+						else
+						{
+							get_error_text_ada($('#namabarang'));
+						}
+					}
+					
+					else
+					{
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Data Tidak Lengkap!',
+						})
+					}
+					
+				});								
+				$('.text-danger').hide();
+				//untuk mengecek bahwa semua textbox tidak boleh kosong
+				$('#formaddbarang input').each(function(){ 
+					$(this).blur(function(){ //blur function itu dijalankan saat element kehilangan fokus
+						if($(this).attr('id')!='#namabarang'){
+							if (! $(this).val()){ //this mengacu pada text box yang sedang fokus
+							return get_error_text(this); //function get_error_text ada di bawah
+							} else {
+								$(this).removeClass('no-valid'); 
+								$(this).parent().find('.text-danger').hide();//cari element dengan class has-warning dari element induk text yang sedang focus
+								$(this).closest('div').removeClass('has-warning');
+								$(this).closest('div').addClass('has-success');							
+							}
+						}						
+					});
+				});			
+				function cekbarang(nama)
+				{  
+					status;
+					$.ajax({
+						method:'post',
+						url:'ajaxcekbarang.php',
+						data:{namabarang : nama},
+						success:function (res){
+							if(res=='tidak ada')status='true';					
+							else status='false'
+							// alert(status);
+						}
+					});
+					return status;
+				}
+				function apply_feedback_error(textbox){
+					$(textbox).addClass('no-valid'); //menambah class no valid
+					$(textbox).parent().find('.text-danger').show();
+					$(textbox).closest('div').removeClass('has-success');
+					$(textbox).closest('div').addClass('has-warning');					
+				}
+
+				//untuk mendapat eror teks saat textbox kosong, digunakan saat submit form dan blur fungsi
+				function get_error_text(textbox){
+					$(textbox).parent().find('.text-danger').text("");
+					$(textbox).parent().find('.text-danger').text("* Field Ini Tidak Boleh Kosong");
+					return apply_feedback_error(textbox);
+				}
+				function get_error_text_ada(textbox){
+					$(textbox).parent().find('.text-danger').text("");
+					$(textbox).parent().find('.text-danger').text("* Barang Sudah Ada");
+					return apply_feedback_error(textbox);
+				}
+				$('body').on('click','#editKopi',function(){
+					editbarang('Kopi');
+				});
+				$('body').on('click','#delKopi',function(){
+					deletebarang('Kopi');
+				});
+				function deletebarang(nama)
+				{
+					$.ajax({
+                    method:'post',
+                    url:'ajaxdeletebarang.php',
+                    data :{namabarang : nama},
+                    success : function(res)
+                    {
+                        loadbarang();
+                    }
+
+                });
+				}
+				// function editbarang(nama)
+				// {
+
+				// 	<?php
+				// 		$username=$_SESSION['login']['username'];
+				// 		$select="SELECT * from barang where username='$user'" a;
+				// 		$res=mysqli_query($conn,$select);
+				// 	?>
+				// }
+				<?php				
+				$username=$_SESSION['login']['username'];
+				$select="SELECT * from barang where username='$user'";
+				$res=mysqli_query($conn,$select);
+				while($row=mysqli_fetch_assoc($res))
+				{
+					echo "$('body').on('click','#edit".$row['nama_barang']."',function(){
+						editbarang('".$row['nama_barang']."');
+					});";
+					echo "$('body').on('click','#del".$row['nama_barang']."',function(){
+						deletebarang('".$row['nama_barang']."');
+					});";  
+				}
+				?>
+			});		
+		</script>			
 		</body>
 	</html>

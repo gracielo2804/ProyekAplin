@@ -1,7 +1,7 @@
 <?php
 require 'conn.php';
 session_start();
-$username=$_SESSION['user'];
+$username=$_SESSION['login']['username'];
 $nama=$_POST['namabarang'];
 $jumlah=$_POST['jumlahbarang'];
 $satuan=$_POST['satbarang'];
