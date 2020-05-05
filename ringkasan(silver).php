@@ -32,6 +32,7 @@ session_start();
 		<script src="js/bootstrap.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 		<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
 	</head>
 		
 	</head>
@@ -162,6 +163,49 @@ session_start();
 									</div>
 									<div class="modal-footer">
 										<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
+										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+									</div>
+								</div>											
+							</div>
+						</div>
+						<!-- Modal -->
+					</form>
+					<form id=formeditbarang method='post'>
+						<!-- Modal -->
+						<div class="modal fade" id="myModal1" role="dialog">
+							<div class="modal-dialog">											
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+									<h4 class="modal-title" style="text-align: center;">Edit Barang</h4>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="namabarang">Nama Barang :</label>
+											<input type="text" class="form-control" id="namabarang1" name="namabarang1" readonly>
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="jumlahbarang">Jumlah Barang : </label>
+											<input type="number" class="form-control" id="jumlahbarang1" name="jumlahbarang1">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="ketbarang">Satuan : </label>
+											<input type="text" class="form-control" id="satbarang1" name="satbarang1">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="ketbarang">Batas Bawah : </label>
+											<input type="text" class="form-control" id="batasb1" name="batasb1">
+											<span class="text-danger" ></span>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-success" name="btnAdd">Edit</button>
 										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 									</div>
 								</div>											
@@ -406,43 +450,93 @@ session_start();
 					$(textbox).parent().find('.text-danger').text("");
 					$(textbox).parent().find('.text-danger').text("* Barang Sudah Ada");
 					return apply_feedback_error(textbox);
-				}
-				$('body').on('click','#editKopi',function(){
-					editbarang('Kopi');
-				});
-				$('body').on('click','#delKopi',function(){
-					deletebarang('Kopi');
-				});
+				}				
 				function deletebarang(nama)
-				{
+				{					
 					$.ajax({
-                    method:'post',
-                    url:'ajaxdeletebarang.php',
-                    data :{namabarang : nama},
-                    success : function(res)
-                    {
-                        loadbarang();
-                    }
-
-                });
+						method:'post',
+						url:'ajaxdeletebarang.php',
+						data :{namabarang : nama},
+						success : function(res)
+						{
+							loadbarang();
+						}
+                	});
+				}							
+				function editbarang()
+				{
+					<?php
+						$namabarang=$_COOKIE['namabarang'];
+						$username=$_SESSION['login']['username'];
+						$sql="SELECT * from barang where username='$username' and nama_barang='$namabarang'";
+						$res=mysqli_query($conn,$sql);
+						while ($row=mysqli_fetch_assoc($res)) {
+							echo "
+								$('#namabarang1').val('".$row['nama_barang']."');
+								$('#jumlahbarang1').val('".$row['stok']."');
+								$('#satbarang1').val('".$row['satuan']."');
+								$('#batasb1').val('".$row['batas_bawah']."');
+								$('#myModal1').modal('toggle');
+							";
+						}
+					?>										
 				}
-				// function editbarang(nama)
-				// {
-
-				// 	<?php
-				// 		$username=$_SESSION['login']['username'];
-				// 		$select="SELECT * from barang where username='$user'" a;
-				// 		$res=mysqli_query($conn,$select);
-				// 	?>
-				// }
+				function edited()
+				{				
+					$.ajax({
+						method:'post',
+						url:'ajaxeditbarang.php',
+						data: $('#formeditbarang').serialize(),
+						success:function(res){
+							Swal.fire({                            
+								title: 'Berhasil Edit Barang',
+								// html: 'Anda akan menuju halaman login',
+								timer: 1500,
+								timerProgressBar: true,                            
+								onClose: () => {    
+									$('#myModal1').modal('toggle');
+									// $('#myModal .close').click();
+									loadbarang();
+								}
+							});							
+						}
+					});								
+				}
+				$('#formeditbarang').on('submit',function(e){
+					e.preventDefault();
+					var valid=true;     
+					$(this).find('input').each(function(){
+						if (! $(this).val()){
+							get_error_text(this);
+							valid = false;							
+						} 
+						if ($(this).hasClass('no-valid')){
+							valid = false;
+						}
+					});
+					if(valid)
+					{
+						edited();						
+					}					
+					else
+					{
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Data Tidak Lengkap!',
+						})
+					}
+					
+				});	
 				<?php				
 				$username=$_SESSION['login']['username'];
-				$select="SELECT * from barang where username='$user'";
+				$select="SELECT * from barang where username='$username'";
 				$res=mysqli_query($conn,$select);
 				while($row=mysqli_fetch_assoc($res))
 				{
-					echo "$('body').on('click','#edit".$row['nama_barang']."',function(){
-						editbarang('".$row['nama_barang']."');
+					echo "$('body').on('click','#edit".$row['nama_barang']."',function(){						
+						document.cookie='namabarang=".$row['nama_barang']."'
+						editbarang();
 					});";
 					echo "$('body').on('click','#del".$row['nama_barang']."',function(){
 						deletebarang('".$row['nama_barang']."');
