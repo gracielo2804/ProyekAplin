@@ -87,7 +87,7 @@ session_start();
 								<li class="has-children">
 										<a href="#" class="nav-link">Karyawan</a>
 										<ul class="dropdown">
-											<li><a href="listkaryawan.html" class="nav-link">List Karyawan</a></li>
+											<li><a href="listkaryawan.php" class="nav-link">List Karyawan</a></li>
 											<li><a href="#" class="nav-link">Hak Akses Karyawan</a></li>
 										</ul>
 								</li>
@@ -305,7 +305,7 @@ session_start();
 		
 		<script src="js/main.js"></script>
 		<script>
-			$(document).ready(function(){
+		   	$(document).ready(function(){
 				$('#formsearch').on('submit',function(e){
 					e.preventDefault();
 					hasilsearch($('#cari').val());
