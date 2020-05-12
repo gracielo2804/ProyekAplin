@@ -2,7 +2,8 @@
 require 'conn.php';
 session_start();
 $username=$_SESSION['login']['username'];
-$query="SELECT * from karyawan where username='$username'";
+$nama=$_POST['namasearch'];
+$query="SELECT * from karyawan where username='$username' and upper(nama_karyawan) Like upper('%$nama%')" ;
 $strings='';
 $res=mysqli_query($conn,$query);
 if(mysqli_num_rows($res)==0)echo '0';

@@ -27,6 +27,7 @@ session_start();
 		<link rel="stylesheet" href="css/aos.css">
 
 		<link rel="stylesheet" href="css/style.css">
+		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 		<script src="js/jQuery.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -107,13 +108,13 @@ session_start();
 			<div class="container">
 				<div>
 					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Daftar Karyawan</h2>
-					<form class="form-inline" style="transform: translate(10px,170px);">
+					<form class="form-inline" id=formsearch style="transform: translate(10px,170px);">
 							<div class="form-group row">
 								<div class="col-10">
-									<input class="form-control" type="text" value="" id="cari"placeholder="Nama Karyawan">
+									<input class="form-control" type="text" value="" id="cari" name="cari"placeholder="Nama Karyawan">
 								</div>									
 							</div>
-							<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+							<button class="btn btn-info btn-xs" type="submit" id=btnsearch style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 									<path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"/>
 									<path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"/>
 								</svg>
@@ -172,6 +173,64 @@ session_start();
 									<div class="modal-footer">
 											<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
 											<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</form>
+						</div>								
+					</div>
+
+					<!-- edit -->
+					<!-- Modal -->
+					<div class="modal fade" id="myModal1" role="dialog">
+						<div class="modal-dialog modal-lg">								
+							<!-- Modal content-->
+							<form id=formeditkaryawan method=post>
+								<div class="modal-content">
+									<div class="modal-header">
+									<h4 class="modal-title" style="text-align: center;">Edit Karyawan</h4>
+									</div>
+									<div class="modal-body">									
+										<div class="form-group has-feedback">
+											<label for="name">Nama Karyawan :</label><br>
+											<input type="text" class="form-control" id="fullname1" name="fullname1" readonly>
+											<i class="form-control-feedback"></i>
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group has-feedback">
+												<label for="username">Username :</label>
+												<input type="text" class="form-control textbox" id="user1" name=user1 readonly>
+												<i class="form-control-feedback"></i>
+												<span class="text-danger" ></span>
+										</div>
+										<div class="form-group has-feedback">
+												<label for="pass">Password :</label>
+												<input type="password" class="form-control textbox" id="pass1" name=pass1  >
+												<i class="form-control-feedback"></i>
+												<span class="text-danger" ></span>
+										</div>
+										<div class="form-group has-feedback">
+											<label for="conpass">Confirm Password :</label>
+											<input type="password" class="form-control textbox" id="conpass1" name=conpass1 >
+											<i class="form-control-feedback"></i>
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group form-group has-feedback">
+											<label for="alamat">Alamat : </label>
+											<input type="text" class="form-control" id="alamat1" name="alamat1" >
+											<i class="form-control-feedback"></i>
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group form-group has-feedback">
+											<label for="telp">No Telp :</label>
+											<input type="number" class="form-control" id="telp1" name="telp1">
+											<i class="form-control-feedback"></i>
+											<span class="text-danger"></span>
+										</div>
+										
+									</div>																			
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-success" name="btnAdd">Edit</button>
+										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
 									</div>
 								</div>
 							</form>
@@ -263,18 +322,18 @@ session_start();
 					else {
 						var valid = false;
 						$.ajax({
-						url: "ajaxcekkaryawan.php",
-						type: "POST",
-						data: "user="+user,
-						dataType: "text",
-						success: function(data)
-						{
-							if (data==0){ //pada file check user.php, apabila user sudah ada di database makan akan mengembalikan nilai 0
-								$('#user').parent().find('.text-danger').text("");
-								$('#user').parent().find('.text-danger').text("username sudah digunakan");
-								return apply_feedback_error('#user');
+							url: "ajaxcekkaryawan.php",
+							type: "POST",
+							data: "user="+user,
+							dataType: "text",
+							success: function(data)
+							{
+								if (data==0){ //pada file check user.php, apabila user sudah ada di database makan akan mengembalikan nilai 0
+									$('#user').parent().find('.text-danger').text("");
+									$('#user').parent().find('.text-danger').text("username sudah digunakan");
+									return apply_feedback_error('#user');
 								}
-						}
+							}
 						});
 					}								
 				} 
@@ -316,6 +375,74 @@ session_start();
 			//mengecek konfirmasi password
 			$('#conpass').blur(function(){
 				var pass = $("#pass").val();
+				var conf=$(this).val();
+				var len=conf.length;
+				if (len>0 && pass!==conf) {
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("Konfirmasi Password tidak sama dengan password");
+					return apply_feedback_error(this);
+				}
+			});
+
+			//mengecek nomer hp
+			$('#telp1').blur(function(){
+				var hp=$(this).val();
+				var len=hp.length;
+				if (len>0 && len<=10){
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("Nomer HP terlalu pendek");
+					return apply_feedback_error(this);
+				} else {
+					if(!valid_hp(hp)){
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Format nomer hp tidak sah.(ex: +6285736262623 | 081212341234)");
+						return apply_feedback_error(this);
+					} 
+					else {
+						if (len >13){
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Nomer HP terlalu Panjang");
+							return apply_feedback_error(this);
+						}
+					}
+				}
+			});
+			$('#fullname1').blur(function(){
+				var nama= $(this).val();
+				var len= nama.length;
+				if(len>0){ //jika ada isinya
+					if(!valid_nama(nama)){ //jika nama tidak valid
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("Nama Tidak Valid");
+						return apply_feedback_error(this);
+					} else {
+						if (len>50){ //jika karakter >30
+							$(this).parent().find('.text-danger').text("");
+							$(this).parent().find('.text-danger').text("Maximal Karakter 50");
+							return apply_feedback_error(this);
+						}
+					}
+				} 
+			});					
+			//mengecek password
+			$('#pass1').blur(function(){
+				var password=$(this).val();
+				var len=password.length;
+				if (len>0 && len<8) {
+					$(this).parent().find('.text-danger').text("");
+					$(this).parent().find('.text-danger').text("password minimal 8 karakter");
+					return apply_feedback_error(this);
+				} else {
+					if(len>35) {
+						$(this).parent().find('.text-danger').text("");
+						$(this).parent().find('.text-danger').text("password maximal 35 karakter");
+						return apply_feedback_error(this);
+					}
+				}
+			});
+			//mengecek konfirmasi password
+			$('#conpass1').blur(function(){
+				var pass = $("#pass1").val();
 				var conf=$(this).val();
 				var len=conf.length;
 				if (len>0 && pass!==conf) {
@@ -454,7 +581,7 @@ session_start();
 				$(textbox).parent().find('.text-danger').text("* Text Box Ini Tidak Boleh Kosong");
 				return apply_feedback_error(textbox);
 			}	
-			function matikankaryawan(usernamek)
+			function editstatus(usernamek)
 			{					
 				$.ajax({
 					method:'post',
@@ -465,7 +592,73 @@ session_start();
 						loadkaryawan();
 					}
 				});
-			}		
+			}
+			function editkaryawan(userk)
+			{			
+				$.ajax({
+					method:'post',
+					url:'ajaxloadformeditk.php',
+					data: {userkaryawan : userk},
+					success:function(res){
+						console.log(res);
+						var data=JSON.parse(res);
+						console.log(data);
+						$('#fullname1').val(data[0]);
+						$('#user1').val(data[1]);
+						$('#alamat1').val(data[2]);
+						$('#telp1').val(data[3]);												
+                    }
+                });
+                $('#myModal1').modal();										
+			}
+			function edited()
+			{				
+				$.ajax({
+					method:'post',
+					url:'ajaxeditkaryawan.php',
+					data: $('#formeditkaryawan').serialize(),
+					success:function(res){
+						Swal.fire({                            
+							title: 'Berhasil Edit karyawan',
+							// html: 'Anda akan menuju halaman login',
+							timer: 1500,
+							timerProgressBar: true,                            
+							onClose: () => {    
+								$('#formeditkaryawan').trigger("reset");
+								$('#myModal1').modal('toggle');
+								// $('#myModal .close').click();
+								loadkaryawan();
+							}
+						});							
+					}
+				});								
+			}
+			$('#formeditkaryawan').on('submit',function(e){
+				e.preventDefault();
+				var valid=true;     
+				$(this).find('input').each(function(){
+					if (! $(this).val()){
+						get_error_text(this);
+						valid = false;							
+					} 
+					if ($(this).hasClass('no-valid')){
+						valid = false;
+					}
+				});
+				if(valid)
+				{
+					edited();						
+				}					
+				else
+				{
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'Data Tidak Lengkap!',
+					})
+				}
+				
+			});			
 			<?php				
 				$username=$_SESSION['login']['username'];
 				$select="SELECT * from karyawan where username='$username'";
@@ -474,17 +667,37 @@ session_start();
 				{
 					echo "$('body').on('click','#edit".$row['username_karyawan']."',function(){						
 						document.cookie='username=".$row['username_karyawan']."'
-						editkaryawan();
+						editkaryawan('".$row['username_karyawan']."');
 					});";
 					echo "$('body').on('click','#del".$row['username_karyawan']."',function(){
-						matikankaryawan('".$row['username_karyawan']."');
+						editstatus('".$row['username_karyawan']."');
 					});";  
 				}
 			?>
 		});
-
-		//fungsi cek nama
-		
+		function hasilsearch(nama)
+		{
+			$('#bodytabel').html('');
+			$.ajax({
+				method:'post',
+				url:'ajaxsearchkaryawan.php',
+				data:{namasearch:nama},
+				success:function(res){
+					if(res=='0'){
+						$('#bodytabel').append('<tr><td colspan=8 align=center><b>No data Found</b></td></tr>');
+					}
+					else 
+					{
+						data=JSON.parse(res);
+						$('#bodytabel').append(data)
+					}
+				}
+			});
+		}
+		$('#formsearch').on('submit',function(e){
+			e.preventDefault();
+			hasilsearch($('#cari').val());
+		});
 		</script>
 
 		
