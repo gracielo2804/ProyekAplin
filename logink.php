@@ -108,8 +108,14 @@
         <div class="row align-items-center justify-content-center">
             <div class="login" style="margin-top: 60px;">
             <form method="post" id="logForm" style="font-weight: bold;color: black;">
-                <h2 style="text-align: center;">Login Owner</h2>
+                <h2 style="text-align: center;">Login Employee</h2>
                 <hr>
+                <div class="form-group has-feedback">
+                    <label for="username">Company Name :</label>
+                    <input type="text" class="form-control textbox" id="company" name='company'>
+                    <i class="form-control-feedback"></i>
+										<span class="text-danger" ></span>
+                </div>
                 <div class="form-group has-feedback">
                     <label for="username">Username :</label>
                     <input type="text" class="form-control textbox" id="username" name='user'>
@@ -129,7 +135,7 @@
                 <button type="submit" class=" btn btn-warning" style="width:280px;" name='btnlogin'>Login</button>
                 <hr>
                 <p style="color:black;font-weight: bold;">Don't have a Cookie account? <a href="register.php">Sign Up</a></p>
-                <p style="color:black;font-weight: bold;">Login Employee <a href="logink.php">Here</a></p>
+                <p style="color:black;font-weight: bold;">Login Owner <a href="login.php">Here</a></p>
             </form>
             </div>
         </div>
@@ -185,9 +191,10 @@
         });
 
         $('#logForm').submit(function(e) {
+          alert('masuk');
           e.preventDefault();
           $.ajax({
-            url: "ceklogin.php",
+            url: "cekloginkaryawan.php",
 						type: "POST",
 						data: $('#logForm').serialize(),
             success: function (res) {
@@ -196,7 +203,7 @@
                   icon: 'error',
                   title: 'Oops...',
                   text: 'Username tidak dapat kami temukan',
-                  footer: '<a href=register.php>Belum memiliki akun?</a>'
+                  footer: 'Silahkan Hubungi Owner Perusahaan</a>'
                 })
               }else if (res == 'pass') {
                 Swal.fire({
@@ -204,34 +211,16 @@
                   title: 'Oops...',
                   text: 'Password yang anda masukkan salah',
                 })
-              }else if (res == 'g') {
+              }
+              else if (res=='s')
+              {
                 Swal.fire({
                     icon: 'success',                            
 										title: 'Login berhasil',
 										timer: 2000,
 										timerProgressBar: true,                            
 										onClose: () => {                              
-										window.location.replace('backend(gold).html')
-										}
-								});
-              }else if (res == 's') {
-                Swal.fire({
-                    icon: 'success',                            
-										title: 'Login berhasil',
-										timer: 2000,
-										timerProgressBar: true,                            
-										onClose: () => {                              
-										window.location.replace('backend(silver).html')
-										}
-								});
-              }else if (res == 'd') {
-                Swal.fire({
-                    icon: 'success',                            
-										title: 'Login berhasil',
-										timer: 2000,
-										timerProgressBar: true,                            
-										onClose: () => {                              
-										window.location.replace('backend(diamond).html')
+										window.location.replace('kat1.php')
 										}
 								});
               }
@@ -256,7 +245,5 @@
 
       
     </script>
-  
-    
     </body>
   </html>

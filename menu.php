@@ -114,11 +114,11 @@ session_start();
 
 			<div class="container">
 				<div>
-					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Ringkasan Barang</h2>
+					<h2 style="transform: translateY(150px);font-weight: bold;color: rgb(28, 10, 112);">Menu</h2>
 					<form class="form-inline" style="transform: translate(10px,170px);" id=formsearch>
 						<div class="form-group row">
 							<div class="col-10">
-								<input class="form-control" type="text" value="" id="cari" placeholder="Nama Barang">
+								<input class="form-control" type="text" value="" id="cari" placeholder="Nama Menu">
 							</div>										
 						</div>
 						<button class="btn btn-info btn-xs" type="submit" style="color: yellow;transform: translateX(10px);"><svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -128,14 +128,14 @@ session_start();
 						</button>
 					</form>
 					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" style="transform: translate(800px,125px);width:300px;">Tambah Barang +</button>
-					<form id=formaddbarang method='post'>
+					<form id=formaddmenu method='post'>
 						<!-- Modal -->
 						<div class="modal fade" id="myModal" role="dialog">
 							<div class="modal-dialog">											
 								<!-- Modal content-->
 								<div class="modal-content">
 									<div class="modal-header">
-									<h4 class="modal-title" style="text-align: center;">Tambah Barang</h4>
+									<h4 class="modal-title" style="text-align: center;">Tambah Menu</h4>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
@@ -464,23 +464,23 @@ session_start();
 						}
                 	});
 				}							
-				function editbarang(namab)
-				{			
-					$.ajax({
-						method:'post',
-						url:'ajaxloadformeditb.php',
-						data: {namabarang : namab},
-						success:function(res){
-							console.log(res);
-							var data=JSON.parse(res);
-							console.log(data);
-							$('#namabarang1').val(data[0]);
-							$('#jumlahbarang1').val(data[1]);
-							$('#satbarang1').val(data[2]);
-							$('#batasb1').val(data[3]);												
+				function editbarang()
+				{
+					<?php
+						$namabarang=$_COOKIE['namabarang'];
+						$username=$_SESSION['login']['username'];
+						$sql="SELECT * from barang where username='$username' and nama_barang='$namabarang'";
+						$res=mysqli_query($conn,$sql);
+						while ($row=mysqli_fetch_assoc($res)) {
+							echo "
+								$('#namabarang1').val('".$row['nama_barang']."');
+								$('#jumlahbarang1').val('".$row['stok']."');
+								$('#satbarang1').val('".$row['satuan']."');
+								$('#batasb1').val('".$row['batas_bawah']."');
+								$('#myModal1').modal('toggle');
+							";
 						}
-					});
-					$('#myModal1').modal();										
+					?>										
 				}
 				function edited()
 				{				
@@ -537,7 +537,7 @@ session_start();
 				{
 					echo "$('body').on('click','#edit".$row['nama_barang']."',function(){						
 						document.cookie='namabarang=".$row['nama_barang']."'
-						editbarang('".$row['nama_barang']."');
+						editbarang();
 					});";
 					echo "$('body').on('click','#del".$row['nama_barang']."',function(){
 						deletebarang('".$row['nama_barang']."');
