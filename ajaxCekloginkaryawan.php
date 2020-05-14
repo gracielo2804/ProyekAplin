@@ -8,13 +8,13 @@
     $querySelect = "SELECT * FROM karyawan k,users u where u.company='$company' and k.username_karyawan='$userlog'";
     $res = mysqli_query($conn, $querySelect);
     while ($row = mysqli_fetch_assoc($res)){
-        if ($userlog == $row['username']) {
+        if ($userlog == $row['username_karyawan']) {
             $ctrLog++;
             if (password_verify($passLog, $row['password'])) {
                 $ctrLog++;
                 $loginInfo['username_karyawan']=$row['username_karyawan'];
                 $loginInfo['nama_karyawan']=$row['nama_karyawan'];
-                $loginInfo['username']=$row['username'];
+                $loginInfo=$row;
             }
         }
     }
@@ -24,7 +24,7 @@
         echo "pass";
     }else if ($ctrLog == 2) {
         session_start();
-        $_SESSION['login'] = $loginInfo;
+        $_SESSION['loginKaryawan'] = $loginInfo;
         echo "s";
     }
 ?>

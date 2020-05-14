@@ -18,6 +18,7 @@ else
         <td>".$row['nama_barang']."</td>
         <td>".$row['stok']."</td>
         <td>".$row['satuan']."</td>
+        <td>".$row['harga']."</td>
         <td>".$keterangan."</td>
         <td align=center><button type='submit'class='btn btn-warning' name='edit".$row['nama_barang']."' id='edit".$row['nama_barang']."' data-toggle='modal' data-target='#myEdit'>
                 <svg class='bi bi-pencil-square' width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>

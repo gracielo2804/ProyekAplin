@@ -191,10 +191,9 @@
         });
 
         $('#logForm').submit(function(e) {
-          alert('masuk');
           e.preventDefault();
           $.ajax({
-            url: "cekloginkaryawan.php",
+            url: "ajaxCekloginkaryawan.php",
 						type: "POST",
 						data: $('#logForm').serialize(),
             success: function (res) {

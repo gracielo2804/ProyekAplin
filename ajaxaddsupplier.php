@@ -2,7 +2,7 @@
 require 'conn.php';
 session_start();
 $username=$_SESSION['login']['username'];
-$nama=$_POST['namasup'];
+$nama=$_POST['namabarang1'];
 $alamat=$_POST['alamat'];
 $telp=$_POST['telp'];
 $keterangan=$_POST['ketsup'];

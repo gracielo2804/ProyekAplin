@@ -152,6 +152,11 @@ session_start();
 											<span class="text-danger" ></span>
 										</div>
 										<div class="form-group">
+											<label for="jumlahbarang">Harga Barang : </label>
+											<input type="number" class="form-control" id="hargabarang" name="hargabarang">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
 											<label for="ketbarang">Satuan : </label>
 											<input type="text" class="form-control" id="satbarang" name="satbarang">
 											<span class="text-danger" ></span>
@@ -195,6 +200,11 @@ session_start();
 											<span class="text-danger" ></span>
 										</div>
 										<div class="form-group">
+											<label for="jumlahbarang">Harga Barang : </label>
+											<input type="number" class="form-control" id="hargabarang1" name="hargabarang1">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
 											<label for="ketbarang">Satuan : </label>
 											<input type="text" class="form-control" id="satbarang1" name="satbarang1">
 											<span class="text-danger" ></span>
@@ -224,6 +234,7 @@ session_start();
 									<th>Nama</th>
 									<th>Stok</th>
 									<th>Satuan</th>
+									<th>Harga</th>
 									<th>Keterangan</th>
 									<th>Opsi</th>
 								</tr>
@@ -338,7 +349,7 @@ session_start();
 						url:'ajaxloadbarang.php',
 						success:function(res){
 							if(res=='0'){
-								$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
+								$('#bodytabel').append('<tr><td colspan=7 align=center><b>No data Found</b></td></tr>');
 							}
 							else 
 							{
@@ -476,8 +487,9 @@ session_start();
 							console.log(data);
 							$('#namabarang1').val(data[0]);
 							$('#jumlahbarang1').val(data[1]);
-							$('#satbarang1').val(data[2]);
-							$('#batasb1').val(data[3]);												
+							$('#hargabarang1').val(data[2]);
+							$('#satbarang1').val(data[3]);
+							$('#batasb1').val(data[4]);												
 						}
 					});
 					$('#myModal1').modal();										
