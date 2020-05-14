@@ -220,7 +220,7 @@
 										timer: 2000,
 										timerProgressBar: true,                            
 										onClose: () => {                              
-										window.location.replace('kat1.php')
+										window.location.replace('kasir.php')
 										}
 								});
               }
