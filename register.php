@@ -165,7 +165,6 @@
 								<div class="row">
 									<button type="submit" class="btn btn-warning btn-sm" style="transform: translateX(380px);font-weight: bold;" name='btnregister'>Register</button>
 									<p style="color:black;font-weight: bold;transform: translate(-110px,10px)">Already Have a Cookie account? <a href="login.php">Sign In</a></p>
-
 								</div>								
 						</form>
 						</div>

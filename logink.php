@@ -102,19 +102,19 @@
 
   
      
-    <div class="site-blocks-cover"   id="home-section">
+    <div class="site-blocks-cover" id="home-section">
 
-      <div class="container">
+      <div class="container" style='transform:translateY(100px)'>
         <div class="row align-items-center justify-content-center">
-            <div class="login" style="margin-top: 60px;">
+            <div class="login" style="margin-top: 60px;" >
             <form method="post" id="logForm" style="font-weight: bold;color: black;">
                 <h2 style="text-align: center;">Login Employee</h2>
                 <hr>
                 <div class="form-group has-feedback">
                     <label for="username">Company Name :</label>
-                    <input type="text" class="form-control textbox" id="company" name='company'>
-                    <i class="form-control-feedback"></i>
-										<span class="text-danger" ></span>
+                    <select class="form-control select" id="company" name=company>
+                      <option value="none">--Select Company--</option>                     
+									  </select>
                 </div>
                 <div class="form-group has-feedback">
                     <label for="username">Username :</label>
@@ -143,7 +143,7 @@
 
      
 
-      <footer class="site-footer">
+      <footer class="site-footer"  style='transform:translateY(300px)'>
       <div class="row pt-5 mt-5 text-center">
         <div class="col-md-12">
           <div class="border-top pt-5">
@@ -189,7 +189,18 @@
             }
           });
         });
-
+        function loadperusahaan()
+        {
+          $.ajax({
+            url: "ajaxloadcompany.php",
+						type: "POST",
+            success: function (res) {
+              $data=JSON.parse(res);
+              $('#company').append($data);
+            }  
+          });
+        }
+        loadperusahaan();
         $('#logForm').submit(function(e) {
           e.preventDefault();
           $.ajax({
@@ -204,11 +215,19 @@
                   text: 'Username tidak dapat kami temukan',
                   footer: 'Silahkan Hubungi Owner Perusahaan</a>'
                 })
-              }else if (res == 'pass') {
+              }
+              else if (res == 'pass') {
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
                   text: 'Password yang anda masukkan salah',
+                })
+              }
+              else if (res == 'nonaktif') {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Anda sudah tidak aktif.Silahkan Hubungi owner perusahaan',
                 })
               }
               else if (res=='s')
