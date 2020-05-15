@@ -59,19 +59,26 @@
           <div class="col-6 col-xl-2">
             <h1 class="mb-0 site-logo">
               <a href="#" class="h2 mb-0">
-                <img src="logo(trans).png" alt="logo" style="width: 80px;height: 90px;transform: translate(1000px,20px);">
+                <img src="logo(trans).png" alt="logo" style="width: 80px;height: 90px;transform: translate(900px,20px);">
             </a>
           </h1>
           </div>
 
           <div class="col-12 col-md-10 d-none d-xl-block">
-            <nav class="site-navigation position-relative text-left" role="navigation"style="transform:translateX(-300px);">
+            <nav class="site-navigation position-relative text-left" role="navigation"style="transform:translateX(-320px);">
 
               <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                 <li><a href="kasir.php" class="nav-link">All</a></li>
                 <li><a href="kat1.html" class="nav-link">Kategori1</a></li>
                 <li><a href="kat2.html" class="nav-link">Kategori2</a></li>
                 <li><a href="kat3.html" class="nav-link">Kategori3</a></li>
+                <li style="transform: translateX(730px);"><button class='btn btn-danger' id='btnlogout'>
+                  <svg class="bi bi-box-arrow-in-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 010-.708L10.793 8 8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9A.5.5 0 011 8z" clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M13.5 14.5A1.5 1.5 0 0015 13V3a1.5 1.5 0 00-1.5-1.5h-8A1.5 1.5 0 004 3v1.5a.5.5 0 001 0V3a.5.5 0 01.5-.5h8a.5.5 0 01.5.5v10a.5.5 0 01-.5.5h-8A.5.5 0 015 13v-1.5a.5.5 0 00-1 0V13a1.5 1.5 0 001.5 1.5h8z" clip-rule="evenodd"/>
+                  </svg> Logout</button>
+                </li>
               </ul>
             </nav>
           </div>
@@ -219,39 +226,59 @@
 					$('#modalTambah').modal();										
 				}
         $('#bayar').on('submit',function(e){
-					e.preventDefault();
-					$.ajax({
-            method:'post',
-						url:'ajaxhitungkembalian.php',
-						data: $('#bayar').serialize(),
-						success:function(res){
-              if (res == 0) {
+          e.preventDefault();
+          $.ajax({            
+            url:'ajaxcekcart.php',
+            success : function(res) {
+              if(res=='0'){
                 Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Uang yang diberikan kurang!',
+                  text: 'Cart masih Kosong!'
                 })
-              }else{
-                var data = JSON.parse(res);
+              }
+              else if(res=='1')
+              {
                 $.ajax({
                   method:'post',
-                  url:'ajaxupdatebarang.php',
+                  url:'ajaxhitungkembalian.php',
+                  data: $('#bayar').serialize(),
                   success:function(res){
-                    Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Pembayaran berhasil!',
-                    text: 'Kembalian Rp.' + data[1]
-                    })
-                    $('#myModal').modal('toggle');
-                    loadNota();
-                    $('#btnBayar').html('Pay '+ 'Rp.-');
-                    $('#totalBayar').html('Rp.-');
+                    if (res == 0) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Uang yang diberikan kurang!',
+                      });
+                    }else{
+                      $.ajax({
+                        url:'ajaxaddnota.php'
+                      });
+                      var data = JSON.parse(res);
+                      $.ajax({
+                        method:'post',
+                        url:'ajaxupdatebarang.php',
+                        success:function(res){
+                          Swal.fire({
+                          icon: 'success',
+                          title: 'Berhasil',
+                          text: 'Pembayaran berhasil!',
+                          text: 'Kembalian Rp.' + data[1]
+                          })
+                          $('#myModal').modal('toggle');
+                          $('#inputuang').val('0');
+                          loadNota();
+                          $('#btnBayar').html('Pay '+ 'Rp.-');
+                          $('#totalBayar').html('Rp.-');
+                        }
+
+                      })
+                    }
                   }
                 })
               }
-						}
-          })
+            }
+				  }); 					
 				});
         $('#tambahBarang').on('submit',function(e){
 					e.preventDefault();
@@ -310,12 +337,13 @@
 						method:'post',
 						url:'ajaxloadnota.php',
 						success:function(res){
-              $('#tableNota').html('');
-              data=JSON.parse(res);
-              $('#tableNota').append(data[0]);
-              $('#btnBayar').html('Pay '+ 'Rp.'+data[1]);
-              $('#totalBayar').html('Rp.'+data[1]);
-              
+              if(res!='0'){
+                $('#tableNota').html('');
+                data=JSON.parse(res);
+                $('#tableNota').append(data[0]);
+                $('#btnBayar').html('Pay '+ 'Rp.'+data[1]);
+                $('#totalBayar').html('Rp.'+data[1]);
+              }                            
             }
           })
           
@@ -384,8 +412,17 @@
 					$(textbox).parent().find('.text-danger').text("");
 					$(textbox).parent().find('.text-danger').text("* Field Ini Tidak Boleh Kosong");
 					return apply_feedback_error(textbox);
-				}
-      </script>
-    
+        }
+        $('#btnlogout').click(function (){
+          $.ajax({
+            url:'ajaxdeletesessionk.php',
+            success:function(res)
+            {
+              window.location.replace('logink.php');
+            }
+          });
+         
+        });        
+      </script>    
 </body>
 </html>

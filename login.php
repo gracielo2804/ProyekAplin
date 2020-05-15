@@ -221,7 +221,7 @@
 										timer: 2000,
 										timerProgressBar: true,                            
 										onClose: () => {                              
-										window.location.replace('backend(silver).html')
+										window.location.replace('laporan.php')
 										}
 								});
               }else if (res == 'd') {

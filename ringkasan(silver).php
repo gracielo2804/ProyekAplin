@@ -76,7 +76,7 @@ session_start();
 						<nav class="site-navigation position-relative text-right" role="navigation">
 
 							<ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block text-black">
-								<li><a href="backend(silver).html" class="nav-link">Laporan</a></li>
+								<li><a href="laporan.php" class="nav-link">Laporan</a></li>
 								<li class="has-children">
 									<a href="#" class="nav-link">Inventory</a>
 									<ul class="dropdown">

@@ -15,7 +15,14 @@ $tmp = array(
     "jumlah" => $jumlah,
     "harga" => $harga * $jumlah
 );
-$_SESSION['cart'][$barang] = $tmp;
+if (isset($_SESSION['cart'][$barang]))
+{
+    $_SESSION['cart'][$barang]['jumlah']=(int)($_SESSION['cart'][$barang]['jumlah'])+$jumlah;
+    $_SESSION['cart'][$barang]['harga']=(int)($_SESSION['cart'][$barang]['harga'])+$tmp['harga'];
+}
+else{
+    $_SESSION['cart'][$barang] = $tmp;
+}
 $total = 0;
 foreach ($_SESSION['cart'] as $key => $value) {
     if ($key != 'total') {
@@ -23,5 +30,4 @@ foreach ($_SESSION['cart'] as $key => $value) {
     }
 }
 $_SESSION['cart']['total'] = $total;
-
 ?>
