@@ -168,7 +168,7 @@ session_start();
 										</div>
 										<div class="form-group">
 											<label for=>Gambar : </label>
-											<input type="file" class="" name="filegambar" id=filegambar></input>
+											<input type="file" class="" name="filegambar" id=filegambar accept="image/*"></input>
 											<span class="text-danger" ></span>
 										</div>
 
