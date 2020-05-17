@@ -76,7 +76,7 @@
 									<ul class="dropdown">
 										<li><a href="ringkasan(silver).php" class="nav-link">Ringkasan</a></li>
 										<li><a href="suppliers(silver).php" class="nav-link">Suppliers</a></li>
-										<li><a href="menu.php" class="nav-link">Menu</a></li>
+										 
 									</ul>
 								</li>
 								<li class="has-children">

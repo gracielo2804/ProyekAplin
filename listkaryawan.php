@@ -77,7 +77,7 @@ session_start();
 									<ul class="dropdown">
 										<li><a href="ringkasan(silver).php" class="nav-link">Ringkasan</a></li>
 										<li><a href="suppliers(silver).php" class="nav-link">Suppliers</a></li>
-										<li><a href="menu.php" class="nav-link">Menu</a></li>
+										 
 									</ul>
 								</li>
 								<li class="has-children">
@@ -583,16 +583,40 @@ session_start();
 				return apply_feedback_error(textbox);
 			}	
 			function editstatus(usernamek)
-			{					
-				$.ajax({
-					method:'post',
-					url:'ajaxnonaktifkaryawan.php',
-					data :{username : usernamek},
-					success : function(res)
+			{	
+				Swal.fire({
+					title: "Konfirmasi ubah status",
+					text: "Apakah anda yakin ingin mengganti status karyawan",
+					type: "success",
+					icon: 'info',
+					showCancelButton: true,
+					confirmButtonColor: "#1da1f2",
+					confirmButtonText: "Yakin",
+					closeOnConfirm: false,
+					showLoaderOnConfirm: true,
+					}).then((result) => 
 					{
-						loadkaryawan();
+					if (result.value) {		
+						Swal.fire({                            
+							title: 'Berhasil ubah status karyawan',
+							// html: 'Anda akan menuju halaman login',
+							timer: 1000,
+							timerProgressBar: true,                            
+							onClose: () => {    									
+								$.ajax({
+									method:'post',
+									url:'ajaxnonaktifkaryawan.php',
+									data :{username : usernamek},
+									success : function(res)
+									{
+										loadkaryawan();
+									}
+								});
+							}
+						});											
 					}
-				});
+				}); 				
+				
 			}
 			function editkaryawan(userk)
 			{			

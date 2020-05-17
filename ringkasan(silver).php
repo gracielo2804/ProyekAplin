@@ -82,7 +82,7 @@ session_start();
 									<ul class="dropdown">
 										<li><a href="ringkasan(silver).php" class="nav-link">Ringkasan</a></li>
 										<li><a href="suppliers(silver).php" class="nav-link">Suppliers</a></li>
-										<li><a href="menu.php" class="nav-link">Menu</a></li>
+										 
 									</ul>
 								</li>
 								<li class="has-children">
@@ -374,12 +374,25 @@ session_start();
 									timerProgressBar: true,                            
 									onClose: () => {    
 										$('#myModal').modal('toggle');
+										$('#namabarang').val(' ');
+										$('#satbarang').val(' ');
+										$('#batasb').val(' ');
+										$('#jumlahbarang').val('0');
+										$('#hargabarang').val('0');		
+										location.reload();															
 										// $('#myModal .close').click();
 										loadbarang();
 
 									}
 								});
-							}							
+							}	
+							else if(res=='0'){
+								Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: 'Barang sudah ada',
+								})
+							}					
 						}
 					});				
 				}
@@ -397,11 +410,7 @@ session_start();
 					});
 					if(valid)
 					{
-						if(cekbarang($('#namabarang').val()))addbarang();
-						else
-						{
-							get_error_text_ada($('#namabarang'));
-						}
+						if(cekbarang($('#namabarang').val()))addbarang();						
 					}
 					
 					else
@@ -464,16 +473,40 @@ session_start();
 					return apply_feedback_error(textbox);
 				}				
 				function deletebarang(nama)
-				{					
-					$.ajax({
-						method:'post',
-						url:'ajaxdeletebarang.php',
-						data :{namabarang : nama},
-						success : function(res)
+				{	
+					Swal.fire({
+						title: "Konfirmasi Hapus Barang",
+						text: "Apakah anda yakin ingin menghapus barang",
+						type: "success",
+						icon: 'info',
+						showCancelButton: true,
+						confirmButtonColor: "#1da1f2",
+						confirmButtonText: "Yakin",
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,
+						}).then((result) => 
 						{
-							loadbarang();
+						if (result.value) {		
+							Swal.fire({                            
+								title: 'Berhasil Hapus Barang',
+								// html: 'Anda akan menuju halaman login',
+								timer: 1000,
+								timerProgressBar: true,                            
+								onClose: () => {    									
+									$.ajax({
+										method:'post',
+										url:'ajaxdeletebarang.php',
+										data :{namabarang : nama},
+										success : function(res)
+										{
+											loadbarang();
+										}
+									});
+								}
+							});											
 						}
-                	});
+					}); 			
+					
 				}							
 				function editbarang(namab)
 				{			
@@ -507,7 +540,7 @@ session_start();
 								timer: 1500,
 								timerProgressBar: true,                            
 								onClose: () => {    
-									$('#myModal1').modal('toggle');
+									$('#myModal1').modal('toggle');									
 									// $('#myModal .close').click();
 									loadbarang();
 								}
