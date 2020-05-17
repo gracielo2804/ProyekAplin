@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2020 at 12:29 PM
+-- Generation Time: May 17, 2020 at 03:06 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.8
 
@@ -37,21 +37,17 @@ CREATE TABLE `barang` (
   `satuan` varchar(10) DEFAULT NULL,
   `batas_bawah` int(6) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `harga` int(11) NOT NULL
+  `harga` int(11) NOT NULL,
+  `gambar` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `barang`
 --
 
-INSERT INTO `barang` (`nama_barang`, `stok`, `satuan`, `batas_bawah`, `username`, `harga`) VALUES
-('Garam', 714, 'gram', 2000, 'cielo', 100),
-('Gula', 0, 'gram', 1000, 'cielo', 150),
-('Kopi', 149520, 'gram', 1000, 'cielo', 200),
-('Kopi', 100, 'gram', 150, 'cielo123', 100),
-('Teh', 1500, 'gram', 20000, 'cielo', 150),
-('Tepung', 15000, 'gram', 2000, 'cielo', 150),
-('tepung', 150, 'gram', 100, 'cielo123', 100);
+INSERT INTO `barang` (`nama_barang`, `stok`, `satuan`, `batas_bawah`, `username`, `harga`, `gambar`) VALUES
+('Kopi', 5500, 'gram', 5000, 'cielo', 100, 'kopi.jpg'),
+('Tepung', 100000, 'gram', 10000, 'cielo', 150, 'tepung.jpg');
 
 -- --------------------------------------------------------
 

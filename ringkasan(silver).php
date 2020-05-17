@@ -166,6 +166,12 @@ session_start();
 											<input type="text" class="form-control" id="batasb" name="batasb">
 											<span class="text-danger" ></span>
 										</div>
+										<div class="form-group">
+											<label for=>Gambar : </label>
+											<input type="file" class="" name="filegambar" id=filegambar></input>
+											<span class="text-danger" ></span>
+										</div>
+
 									</div>
 									<div class="modal-footer">
 										<button type="submit" class="btn btn-success" name="btnAdd">Tambahkan</button>
@@ -176,7 +182,7 @@ session_start();
 						</div>
 						<!-- Modal -->
 					</form>
-					<form id=formeditbarang method='post'>
+					<form id=formeditbarang method='post' enctype="multipart/form-data">
 						<!-- Modal -->
 						<div class="modal fade" id="myModal1" role="dialog">
 							<div class="modal-dialog">											
@@ -360,11 +366,13 @@ session_start();
 					});
 				}
 				function addbarang()
-				{					
-					$.ajax({
+				{				
+					formdata=$('#formaddbarang');	
+					$.ajax({						
 						method:'post',
 						url:'ajaxaddbarang.php',
-						data: $('#formaddbarang').serialize(),
+						data: new FormData(formdata),
+						dataType:'json',
 						success:function(res){
 							if(res=='1'){
 								Swal.fire({                            
@@ -400,17 +408,68 @@ session_start();
 					e.preventDefault();
 					var valid=true;     
 					$(this).find('input').each(function(){
-						if (! $(this).val()){
+						if($(this).attr('id')!='filegambar')
+						{
+							if (! $(this).val()){
 							get_error_text(this);
 							valid = false;							
-						} 
-						if ($(this).hasClass('no-valid')){
-							valid = false;
-						}
+							} 
+							if ($(this).hasClass('no-valid')){
+								valid = false;
+							}
+						}						
 					});
 					if(valid)
 					{
-						if(cekbarang($('#namabarang').val()))addbarang();						
+						// if(cekbarang($('#namabarang').val()))addbarang();						
+						if(cekbarang($('#namabarang').val()))
+						{
+							$.ajax({						
+								method:'post',
+								url:'ajaxaddbarang.php',
+								data: new FormData(this),
+								dataType:'json',
+								contentType: false,
+								cache: false,
+								processData:false,
+								success:function(res){
+									if(res=='1'){
+										Swal.fire({                            
+											title: 'Berhasil Menambah Barang',
+											// html: 'Anda akan menuju halaman login',
+											timer: 1000,
+											timerProgressBar: true,                            
+											onClose: () => {    
+												$('#myModal').modal('toggle');
+												$('#namabarang').val(' ');
+												$('#satbarang').val(' ');
+												$('#batasb').val(' ');
+												$('#jumlahbarang').val('0');
+												$('#hargabarang').val('0');		
+												location.reload();															
+												// $('#myModal .close').click();
+												loadbarang();
+
+											}
+										});
+									}	
+									else if(res=='0'){
+										Swal.fire({
+										icon: 'error',
+										title: 'Oops...',
+										text: 'Barang sudah ada',
+										})
+									}	
+									else if(res=='gambar'){
+										Swal.fire({
+										icon: 'error',
+										title: 'Oops...',
+										text: 'File yang anda upload bermasalah',
+										})
+									}					
+								}
+							});	
+						}
 					}
 					
 					else
