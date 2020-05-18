@@ -1,6 +1,6 @@
 <?php
-    session_start();
     require_once 'conn.php';
+    session_start();    
     $company = $_POST['company'];
     $userlog = $_POST['user'];
     $passLog = $_POST['pass'];
@@ -8,7 +8,7 @@
     $usernamelog='';
     $usernameklog='';
     $ctrLog = 0;
-    $querySelect = "SELECT * FROM karyawan k,users u where u.company='$company' and k.username_karyawan='$userlog'";
+    $querySelect = "SELECT * FROM karyawan where username='$company' and username_karyawan='$userlog'";
     $res = mysqli_query($conn, $querySelect);
     while ($row = mysqli_fetch_assoc($res)){
         if ($userlog == $row['username_karyawan']) {
@@ -35,11 +35,12 @@
     }else if ($ctrLog == 1) {
         echo "pass";
     }else if ($ctrLog == 2) {
-        echo 'nonaktif';  
-        // echo $usernamelog.$usernameklog;     
+        echo 'nonaktif';    
     }
     else if ($ctrLog == 3){ 
         $_SESSION['loginKaryawan'] = $loginInfo;
         echo "s";
+    }else{
+        echo $ctrLog;
     }
 ?>

@@ -387,7 +387,7 @@ session_start();
 										$('#batasb').val(' ');
 										$('#jumlahbarang').val('0');
 										$('#hargabarang').val('0');		
-										location.reload();															
+										// location.reload();															
 										// $('#myModal .close').click();
 										loadbarang();
 
@@ -446,7 +446,7 @@ session_start();
 												$('#batasb').val(' ');
 												$('#jumlahbarang').val('0');
 												$('#hargabarang').val('0');		
-												location.reload();															
+												// location.reload();															
 												// $('#myModal .close').click();
 												loadbarang();
 

@@ -11,8 +11,8 @@ else
     $ctr=1;
     while($row=mysqli_fetch_assoc($res))
     {
-        $strings=$strings."<button type='submit' class='btn btn-light m-3' name='cart".$row['nama_barang']."' id='cart".$row['nama_barang']."' style='width:150px;height: 
-        150px;transform: translate(20px,100px);float: left;'>".$row['nama_barang']."
+        $strings=$strings."<button type='submit' class='btn btn-light m-3' name='cart".$row['nama_barang']."' id='cart".$row['nama_barang']."' style=' width:150px;height: 
+        150px;transform: translate(20px,100px);float: left;'><img src='gambar/".$row['gambar']."' class='border border-primary rounded' style='width: 85px;height: 85px;'> ".$row['nama_barang']."
         </button>";
         $ctr++;
     }

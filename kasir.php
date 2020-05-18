@@ -68,11 +68,8 @@
             <nav class="site-navigation position-relative text-left" role="navigation"style="transform:translateX(-320px);">
 
               <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
-                <li><a href="kasir.php" class="nav-link">All</a></li>
-                <li><a href="kat1.html" class="nav-link">Kategori1</a></li>
-                <li><a href="kat2.html" class="nav-link">Kategori2</a></li>
-                <li><a href="kat3.html" class="nav-link">Kategori3</a></li>
-                <li style="transform: translateX(730px);"><button class='btn btn-danger' id='btnlogout'>
+                <li><a href="kasir.php" class="nav-link">Kasir</a></li>
+                <li style="transform: translateX(1000px);"><button class='btn btn-danger' id='btnlogout'>
                   <svg class="bi bi-box-arrow-in-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M8.146 11.354a.5.5 0 010-.708L10.793 8 8.146 5.354a.5.5 0 11.708-.708l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708 0z" clip-rule="evenodd"/>
                     <path fill-rule="evenodd" d="M1 8a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9A.5.5 0 011 8z" clip-rule="evenodd"/>
@@ -206,10 +203,49 @@
             echo "$('body').on('click','#cart".$row['nama_barang']."',function(e){
               e.preventDefault();
               cartBarang('".$row['nama_barang']."');
+            });";
+            echo "$('body').on('click','#del".$row['nama_barang']."',function(){
+              deletenota('".$row['nama_barang']."');
             });";  
           }
           ?>
         })
+        function deletenota(nama)
+				{	
+					Swal.fire({
+						title: "Konfirmasi Hapus Barang",
+						text: "Apakah anda yakin ingin menghapus barang",
+						type: "success",
+						icon: 'info',
+						showCancelButton: true,
+						confirmButtonColor: "#1da1f2",
+						confirmButtonText: "Yakin",
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,
+						}).then((result) => 
+						{
+						if (result.value) {		
+							Swal.fire({                            
+								title: 'Berhasil Hapus Barang',
+								// html: 'Anda akan menuju halaman login',
+								timer: 1000,
+								timerProgressBar: true,                            
+								onClose: () => {    									
+									$.ajax({
+										method:'post',
+										url:'ajaxdeletenota.php',
+										data :{namabarang : nama},
+										success : function(res)
+										{
+											loadNota();
+										}
+									});
+								}
+							});											
+						}
+					}); 			
+					
+				}
         function cartBarang(namab)
 				{			
 					$.ajax({

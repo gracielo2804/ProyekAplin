@@ -1,5 +1,6 @@
 <?php
 	require_once 'conn.php';
+	session_start();
 ?>
 <!doctype html>
 <html lang="en">
@@ -11,7 +12,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 		<link rel="stylesheet" href="fonts/icomoon/style.css">
 
-		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
 		<link rel="stylesheet" href="css/jquery-ui.css">
 		<link rel="stylesheet" href="css/owl.carousel.min.css">
 		<link rel="stylesheet" href="css/owl.theme.default.min.css">
@@ -26,6 +27,7 @@
 		<link rel="stylesheet" href="css/aos.css">
 
 		<link rel="stylesheet" href="css/style.css">
+		<script src="js/jQuery.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 		<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
@@ -160,6 +162,44 @@
 							</div>
 						</div>
 					</form>
+					<form id="FormeditSupp" method="post">
+						<div class="modal fade" id="myModal1" role="dialog">
+							<div class="modal-dialog">									
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+									<h4 class="modal-title" style="text-align: center;">Tambah Supplier</h4>
+									</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="namasup">Nama Supplier :</label>
+											<input type="text" class="form-control" id="namasup1" name="namasup1" readonly>
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="alamat">Alamat:</label>
+											<input type="text" class="form-control" id="alamat1" name="alamat1">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="telp">No Telp :</label>
+											<input type="number" class="form-control" id="telp1" name="telp1">
+											<span class="text-danger" ></span>
+										</div>
+										<div class="form-group">
+											<label for="ketbarang">Keterangan :</label>
+											<input type="text" class="form-control" id="ketsup1" name="ketsup1">
+											<span class="text-danger" ></span>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-success" name="btnEdit">Edit</button>
+										<button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
 					<div class="isi laporan" style="border: solid 1px blue;transform: translateY(200px);height:1200px;border-radius: 10px;">
 						<table class="table table-bordered">
 							<thead>
@@ -173,7 +213,7 @@
 								</tr>
 							</thead>
 							<tbody id=bodytabel>
-								<!-- <tr>
+																<!-- <tr>
 									<td>1</td>
 									<td>abc</td>
 									<td>abc</td>
@@ -193,6 +233,7 @@
 											</button>
 										</td>
 								</tr> -->
+
 							</tbody>
 						</table>
 					</div>
@@ -201,8 +242,7 @@
 		</div>
 		
 
-		</div>  
-		<script src="js/jquery-3.3.1.min.js"></script>
+		</div> 
 		<script src="js/jquery-ui.js"></script>
 		<script src="js/popper.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
@@ -218,12 +258,12 @@
 		<script src="js/main.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+				loadsupplier();
+				
 				$('#formsearch').on('submit',function(e){
 					e.preventDefault();
 					hasilsearch($('#cari').val());
 				});
-
-				loadsupplier();
 				$('.text-danger').hide();
 				//untuk mengecek bahwa semua textbox tidak boleh kosong
 				$('#FormaddSupp input').each(function(){ 
@@ -293,10 +333,178 @@
 					}
 				});
 				function loadsupplier(){
+				$('#bodytabel').html('');
+				$.ajax({
+					method:'post',
+					url:'ajaxloadsupplier.php',
+					success:function(res){
+						if(res=='0'){
+							$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
+						}
+						else 
+						{
+							data=JSON.parse(res);
+							$('#bodytabel').append(data)
+						}
+					}
+				});
+				}
+				function editsupp(namas)
+				{			
+					$.ajax({
+						method:'post',
+						url:'ajaxloadformedits.php',
+						data: {namasupp : namas},
+						success:function(res){
+							console.log(res);
+							var data=JSON.parse(res);
+							console.log(data);
+							$('#namasup1').val(data[0]);
+							$('#alamat1').val(data[1]);
+							$('#telp1').val(data[2]);
+							$('#ketsup1').val(data[3]);											
+						}
+					});
+					$('#myModal1').modal();										
+				}
+				$('#FormeditSupp').on('submit',function(e){
+					e.preventDefault();
+					var valid=true;     
+					$(this).find('input').each(function(){
+						if (! $(this).val()){
+							get_error_text(this);
+							valid = false;							
+						} 
+						if ($(this).hasClass('no-valid')){
+							valid = false;
+						}
+					});
+					if(valid)
+					{
+						edited();						
+					}					
+					else
+					{
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Data Tidak Lengkap!',
+						})
+					}		
+				});	
+				function edited()
+				{				
+					$.ajax({
+						method:'post',
+						url:'ajaxeditSupp.php',
+						data: $('#FormeditSupp').serialize(),
+						success:function(res){
+							Swal.fire({                            
+								title: 'Berhasil Edit Barang',
+								// html: 'Anda akan menuju halaman login',
+								timer: 1500,
+								timerProgressBar: true,                            
+								onClose: () => {    
+									$('#myModal1').modal('toggle');									
+									// $('#myModal .close').click();
+									loadsupplier();
+								}
+							});							
+						}
+					});								
+				}
+				function deletesupp(nama)
+				{	
+					Swal.fire({
+						title: "Konfirmasi Hapus Supplier",
+						text: "Apakah anda yakin ingin menghapus supplier",
+						type: "success",
+						icon: 'info',
+						showCancelButton: true,
+						confirmButtonColor: "#1da1f2",
+						confirmButtonText: "Yakin",
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,
+						}).then((result) => 
+						{
+						if (result.value) {		
+							Swal.fire({                            
+								title: 'Berhasil Hapus Supplier',
+								// html: 'Anda akan menuju halaman login',
+								timer: 1000,
+								timerProgressBar: true,                            
+								onClose: () => {    									
+									$.ajax({
+										method:'post',
+										url:'ajaxdeletesupplier.php',
+										data :{namasupplier : nama},
+										success : function(res)
+										{
+											loadsupplier();
+										}
+									});
+								}
+							});											
+						}
+					}); 			
+				}					
+				function addsup(){
+					$.ajax({						
+						method:'post',
+						url:'ajaxaddsupplier.php',
+						data: $('#FormaddSupp').serialize(),
+						success:function(res){
+							if(res=='1'){
+								Swal.fire({
+									icon: 'success',
+									title: 'Berhasil menambah supplier',
+								})
+								$('#myModal').modal('toggle');
+								$('#namasup').val(' ');
+								$('#alamat').val(' ');
+								$('#telp').val(' ');
+								$('#ketsup').val(' ');
+								// location.reload();															
+								// $('#myModal .close').click();
+								$('#bodytabel').html('');
+								$.ajax({
+									method:'post',
+									url:'ajaxloadsupplier.php',
+									success:function(res){
+										if(res=='0'){
+											$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
+										}
+										else 
+										{
+											data=JSON.parse(res);
+											$('#bodytabel').append(data)
+										}
+									}
+								});
+							}					
+						}
+					});						
+				}
+				function cekSup(nama){  
+					status;
+					$.ajax({
+						method:'post',
+						url:'ajaxceksupplier.php',
+						data:{namasup : nama},
+						success:function (res){
+							if(res=='tidak ada')status='true';					
+							else status='false'
+						}
+					});
+					return status;
+				}
+				function hasilsearch(nama)
+				{
 					$('#bodytabel').html('');
 					$.ajax({
 						method:'post',
-						url:'ajaxloadsupplier.php',
+						url:'ajaxsearchsupplier.php',
+						data:{namasearch:nama},
 						success:function(res){
 							if(res=='0'){
 								$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
@@ -309,81 +517,43 @@
 						}
 					});
 				}
+				function apply_feedback_error(textbox){
+					$(textbox).addClass('no-valid'); //menambah class no valid
+					$(textbox).parent().find('.text-danger').show();
+					$(textbox).closest('div').removeClass('has-success');
+					$(textbox).closest('div').addClass('has-warning');					
+				}
+				function get_error_text(textbox){
+					$(textbox).parent().find('.text-danger').text("");
+					$(textbox).parent().find('.text-danger').text("* Field Ini Tidak Boleh Kosong");
+					apply_feedback_error(textbox);
+				}
+				function get_error_text_ada(textbox){
+					$(textbox).parent().find('.text-danger').text("");
+					$(textbox).parent().find('.text-danger').text("* Nama supplier Sudah Ada");
+					return apply_feedback_error(textbox);
+				}
+				function valid_hp(hp){
+					var pola = new RegExp(/^[0-9-+]{12,14}$/);
+					return pola.test(hp);
+				};
+				
+				<?php				
+					$username=$_SESSION['login']['username'];
+					$select="SELECT * from supplier where username='$username'";
+					$res=mysqli_query($conn,$select);
+					while($row=mysqli_fetch_assoc($res))
+					{
+						echo "$('body').on('click','#edit".$row['nama_supplier']."',function(){						
+							document.cookie='namasupplier=".$row['nama_supplier']."'
+							editsupp('".$row['nama_supplier']."');
+						});";
+						echo "$('body').on('click','#del".$row['nama_supplier']."',function(){
+							deletesupp('".$row['nama_supplier']."');
+						});";  
+					}
+				?>
 			});
-			function addsup(){					
-				$.ajax({
-						method:'post',
-						url:'ajaxaddsupplier.php',
-						data: $('#FormaddSupp').serialize(),
-						success:function(res){
-							if(res=='1'){
-								Swal.fire({                            
-									title: 'Berhasil Menambah Supplier',
-									// html: 'Anda akan menuju halaman login',
-									timer: 1000,
-									timerProgressBar: true,                            
-									onClose: () => {    
-										$('#myModal').modal('hide');
-										loadsupplier();
-
-									}
-								});
-							}							
-						}
-					});					
-			}
-			function cekSup(nama){  
-				status;
-				$.ajax({
-					method:'post',
-					url:'ajaxceksupplier.php',
-					data:{namasup : nama},
-					success:function (res){
-						if(res=='tidak ada')status='true';					
-						else status='false'
-					}
-				});
-				return status;
-			}
-			function hasilsearch(nama)
-			{
-				$('#bodytabel').html('');
-				$.ajax({
-					method:'post',
-					url:'ajaxsearchsupplier.php',
-					data:{namasearch:nama},
-					success:function(res){
-						if(res=='0'){
-							$('#bodytabel').append('<tr><td colspan=6 align=center><b>No data Found</b></td></tr>');
-						}
-						else 
-						{
-							data=JSON.parse(res);
-							$('#bodytabel').append(data)
-						}
-					}
-				});
-			}
-			function apply_feedback_error(textbox){
-				$(textbox).addClass('no-valid'); //menambah class no valid
-				$(textbox).parent().find('.text-danger').show();
-				$(textbox).closest('div').removeClass('has-success');
-				$(textbox).closest('div').addClass('has-warning');					
-			}
-			function get_error_text(textbox){
-				$(textbox).parent().find('.text-danger').text("");
-				$(textbox).parent().find('.text-danger').text("* Field Ini Tidak Boleh Kosong");
-				 apply_feedback_error(textbox);
-			}
-			function get_error_text_ada(textbox){
-				$(textbox).parent().find('.text-danger').text("");
-				$(textbox).parent().find('.text-danger').text("* Nama supplier Sudah Ada");
-				return apply_feedback_error(textbox);
-			}
-			function valid_hp(hp){
-				var pola = new RegExp(/^[0-9-+]{12,14}$/);
-				return pola.test(hp);
-			}	
 		</script>    
 		</body>
 	</html>
