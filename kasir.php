@@ -156,7 +156,7 @@
           <h5 id="totalBayar">Rp.xx.xxx</h5>
           
           <input type="number" id="inputuang" name="inputuang"class="form-control"><br>
-          <!-- <div style="transform: translateY(30px);"></div><br>
+          <div style="transform: translateY(30px);"></div><br>
           <button type="button" name="btn1rb" id="btn1rb" class="btn btn-info" style="transform: translateY(10px);margin-left: 10px;">Rp.1.000</button>
           <button type="button" name="btn2rb" id="btn2rb" class="btn btn-info" style="transform: translateY(10px);">Rp.2.000</button>
           <button type="button" name="btn5rb" id="btn5rb" class="btn btn-info" style="transform: translateY(10px);">Rp.5.000</button>
@@ -167,7 +167,7 @@
           <br>
           <button type="button" name="btn100rb" id="btn100rb" class="btn btn-info" style="transform: translateY(30px);">Rp.100.000</button>
           <br>
-          <h5 id="kembalian" style="text-align:right;transform: translateY(35px);">Kembalian : Rp.xx.xxx</h5> -->
+          <!-- <h5 id="kembalian" style="text-align:right;transform: translateY(35px);">Kembalian : Rp.xx.xxx</h5> -->
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -191,7 +191,9 @@
       <script src="js/isotope.pkgd.min.js"></script>
       <script src="js/main.js"></script>
       <script>
+      var uangbayar=parseInt(0);
         $(document).ready(function() {
+                   
           loadMenu();
           loadNota();
           <?php			
@@ -209,7 +211,11 @@
             });";  
           }
           ?>
-        })
+        });
+        function rewrite()
+          {
+            $('#inputuang').val(uangbayar);
+          }
         function deletenota(nama)
 				{	
 					Swal.fire({
@@ -418,7 +424,9 @@
         });
         
         function uang(res) {
-          $('#inputuang').val($("#inputuang").val() + res);
+          uangbayar=uangbayar+res;
+          rewrite();
+          // $('#inputuang').val($("#inputuang").val() + res);
         }
         $('.text-danger').hide();
 				//untuk mengecek bahwa semua textbox tidak boleh kosong
