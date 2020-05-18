@@ -4,6 +4,7 @@
     $company = $_POST['company'];
     $userlog = $_POST['user'];
     $passLog = $_POST['pass'];
+    $usercom='';
     $loginInfo=[];
     $usernamelog='';
     $usernameklog='';
@@ -19,15 +20,18 @@
                 $loginInfo['nama_karyawan']=$row['nama_karyawan'];
                 $loginInfo=$row;
                 $usernamelog=$row['username'];
-                // echo $usernamelog;
+                
                 $usernameklog=$row['username_karyawan'];
-                // echo $usernameklog;
+                
             }           
         }
     }
+    // echo $usernamelog;
+    // echo $usernameklog;
     $query = "SELECT status FROM karyawan where username='$usernamelog' and username_karyawan='$usernameklog'";
     $res = mysqli_query($conn, $query);
     while ($row = mysqli_fetch_assoc($res)) {
+        // echo ($row['status']);
         if($row['status']=='1')$ctrLog++;
     }
     if ($ctrLog == 0) {
